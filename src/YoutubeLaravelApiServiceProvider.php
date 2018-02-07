@@ -11,7 +11,8 @@ class YoutubeLaravelApiServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function boot() {
-		//
+		$this->publishes(array(__DIR__ . '/config/google-config.php' => config_path('google-config.php')),'youtube-config');
+
 	}
 
 	/**
