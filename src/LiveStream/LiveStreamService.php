@@ -147,22 +147,17 @@ class LiveStreamService extends AuthService
 
             /** 
              * API request [inserts liveStream resource.]
-            /** 
-             * API request [inserts liveStream resource.]
              */
             $this->googleYoutubeLiveStream->setSnippet($this->googleYoutubeLiveStreamSnippet);
             $this->googleYoutubeLiveStream->setCdn($this->googleYoutubeCdnSettings);
             $this->googleYoutubeLiveStream->setKind('youtube#liveStream');
 
-            /*
             /**
              * execute the insert request [return an object that contains information about new stream]
              */
             $streamsResponse = $youtube->liveStreams->insert('snippet,cdn', $this->googleYoutubeLiveStream, array());
             $response['stream_response'] = $streamsResponse;
 
-            /**
-             * Bind the broadcast to the live stream
             /**
              * Bind the broadcast to the live stream
              */
@@ -468,7 +463,7 @@ class LiveStreamService extends AuthService
 
             $this->googleYoutubeLiveStreamSnippet->setTitle($title);
 
-                        /**
+            /**
              * object for content distribution  [stream's format,ingestion type.]
              */
 
