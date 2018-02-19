@@ -1,5 +1,5 @@
 {
-    "name": "alchemyguy/YoutubeLaravelApi",
+    "name": "alchemyguy/youtube-laravel-api",
     "type": "library | wrapper",
     "description": "It is a wrapper over Youtube Api v3 which simplifies functionalities the laravel way.",
     "keywords": ["alchemyguy", "YoutubeLaravelApi", "Youtube LiveStream", "php", "Youtube Backup", "Youtube Video", "Youtube Api V3", "laravel", "Oauth", "google api", "Youtube Channel"],
