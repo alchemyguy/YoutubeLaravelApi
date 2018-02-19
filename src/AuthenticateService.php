@@ -1,5 +1,5 @@
 <?php 
-namespace AlchemyGuy\YoutubeLaravelApi;
+namespace alchemyguy\YoutubeLaravelApi;
 
 use Exception;
 use AlchemyGuy\YoutubeLaravelApi\Auth\AuthService;

@@ -1,9 +1,9 @@
 <?php 
-namespace AlchemyGuy\YoutubeLaravelApi;;
+namespace alchemyguy\YoutubeLaravelApi;;
 
 use Exception;
 use Carbon\Carbon;
-use AlchemyGuy\YoutubeLaravelApi\Auth\AuthService;
+use alchemyguy\YoutubeLaravelApi\Auth\AuthService;
 
 /**
 *  Api Service For Youtube Live Events

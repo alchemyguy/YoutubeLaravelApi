@@ -1,8 +1,8 @@
 <?php 
-namespace AlchemyGuy\YoutubeLaravelApi;
+namespace alchemyguy\YoutubeLaravelApi;
 
 use Exception;
-use AlchemyGuy\YoutubeLaravelApi\Auth\AuthService;
+use alchemyguy\YoutubeLaravelApi\Auth\AuthService;
 
 class ChannelService extends AuthService
 {
