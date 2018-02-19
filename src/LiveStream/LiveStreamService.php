@@ -48,7 +48,7 @@ class LiveStreamService extends AuthService
             /** 
              * [setAccessToken [setting accent token to client]]
              */                 
-            $setAccessToken = self::setAccessToken($token);
+            $setAccessToken = $this->setAccessToken($token);
             if(!$setAccessToken)
                 return false;   
 
@@ -107,7 +107,7 @@ class LiveStreamService extends AuthService
              * set thumbnail to the event
              */
             if(!is_null($thumbnail_path))
-                $thumb = self::uploadThumbnail($thumbnail_path, $youtube_event_id);
+                $thumb = $this->uploadThumbnail($thumbnail_path, $youtube_event_id);
 
             /**
              * Call the API's videos.list method to retrieve the video resource.
@@ -313,7 +313,7 @@ class LiveStreamService extends AuthService
             /** 
              * [setAccessToken [setting accent token to client]]
              */                 
-            $setAccessToken = self::setAccessToken($token);         
+            $setAccessToken = $this->setAccessToken($token);         
             if(!$setAccessToken)
                 return false;   
 
@@ -350,7 +350,7 @@ class LiveStreamService extends AuthService
             /** 
              * [setAccessToken [setting accent token to client]]
              */                 
-            $setAccessToken = self::setAccessToken($token);
+            $setAccessToken = $this->setAccessToken($token);
             if(!$setAccessToken)
                 return false;   
             /** 
@@ -425,7 +425,7 @@ class LiveStreamService extends AuthService
              * set thumbnail
              */
             if(!is_null($thumbnail_path)){
-                $thumb = self::uploadThumbnail($thumbnail_path, $youtube_event_id);
+                $thumb = $this->uploadThumbnail($thumbnail_path, $youtube_event_id);
             }
 
             /** 
@@ -523,7 +523,7 @@ class LiveStreamService extends AuthService
             /** 
              * [setAccessToken [setting accent token to client]]
              */                 
-            $setAccessToken = self::setAccessToken($token);
+            $setAccessToken = $this->setAccessToken($token);
             if(!$setAccessToken)
                 return false;   
             /** 

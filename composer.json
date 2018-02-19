@@ -2,7 +2,7 @@
     "name": "AlchemyGuy/YoutubeLaravelApi",
     "type": "library | wrapper",
     "description": "It is a wrapper over Youtube Api v3 which simplifies functionalities the laravel way.",
-    "keywords": ["AlchemyGuy", "YoutubeLaravelApi", "Youtube LiveStream", "php", "Youtube Backup", "Youtube Video", "Youtube Api V3", "laravel", "Oauth"],
+    "keywords": ["AlchemyGuy", "YoutubeLaravelApi", "Youtube LiveStream", "php", "Youtube Backup", "Youtube Video", "Youtube Api V3", "laravel", "Oauth", "google api", "Youtube Channel"],
     "homepage": "https://github.com/AlchemyGuy/YoutubeLaravelApi",
     "license": "MIT",
     "authors": [

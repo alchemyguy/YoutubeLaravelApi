@@ -125,4 +125,94 @@ class AuthService
     }
 
 
+	/**	
+	 * [createResource creating a resource array and addind properties to it]
+	 * @param  $properties [param properties to be added to channel]
+	 * @return             [resource array]
+	 */
+	public function createResource($properties) 
+	{
+		try {
+
+		    $resource = array();
+		    foreach ($properties as $prop => $value) {
+
+		        if ($value) {
+		        	/**	
+		        	 * add property to resource 
+		        	 */
+		            $this->addPropertyToResource($resource, $prop, $value);
+		        }
+		    }
+
+		    return $resource;
+
+		} catch (Exception $e) {
+			throw new Exception($e->getMessage(), 1);
+		}
+	}
+
+	/**
+	 * [addPropertyToResource description]
+	 * @param &$ref     [using reference of array from createResource to add property to it]
+	 * @param $property [property to be inserted to resource array]
+	 */
+	public function addPropertyToResource(&$ref, $property, $value)
+	{
+		try {
+			
+		    $keys = explode(".", $property);
+		    $isArray = false;
+		    foreach ($keys as $key) {
+
+		    	/**	
+		    	 * snippet.tags[]  [convert to snippet.tags]
+		    	 * a boolean variable  [to handle the value like an array]
+		    	 */
+		        if (substr($key, -2) == "[]") {
+		            $key = substr($key, 0, -2);
+		            $isArray = true;
+		        }
+
+		        $ref = &$ref[$key];
+		    }
+
+		    /**	
+		     * Set the property value [ handling the array values]
+		     */
+		    if ($isArray && $value) {
+
+		        $ref = $value;
+		        $ref = explode(",", $value);
+
+		    } elseif ($isArray) {
+
+		        $ref = array();
+
+		    } else {
+
+		        $ref = $value;
+		    }
+
+		} catch ( Exception $e ) {
+			throw new Exception($e->getMessage(), 1);
+		}
+	}
+
+	
+	/**
+	 * [parseTime - parse the video time in to description format]
+	 * @param  $time [youtube returned time format]
+	 * @return       [string parsed time]
+	 */
+	public function parseTime($time) 
+	{
+		$tempTime = str_replace("PT", " ", $time);
+		$tempTime = str_replace('H', " Hours ", $tempTime);
+		$tempTime = str_replace('M', " Minutes ", $tempTime);
+		$tempTime = str_replace('S', " Seconds ", $tempTime);
+
+		return $tempTime;
+	}
+
 }
