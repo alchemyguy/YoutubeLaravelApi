@@ -108,8 +108,12 @@ class ChannelService extends AuthService {
 	}
 
 
-
-	public function subscriptionByChannelId($part, $params)
+   /**
+     * [parseSubscriptions modified for backUp]
+     * @param  [type] $part 
+     * @return [type] $params          array('channelId'= '', "maxResults"='' )
+     */
+	public function subscriptionByChannelId($params, $part='snippet')
     {
         try {
 

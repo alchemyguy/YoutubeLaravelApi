@@ -3,15 +3,17 @@ namespace alchemyguy\YoutubeLaravelApi;
 
 use Exception;
 use Carbon\Carbon;
-use AlchemyGuy\YoutubeLaravelApi\Auth\AuthService;
+use alchemyguy\YoutubeLaravelApi\Auth\AuthService;
 
 class AuthenticateService extends AuthService {
+
 	protected $googleLiveBroadcastSnippet;
 	protected $googleLiveBroadcastStatus;
 	protected $googleYoutubeLiveBroadcast;
 
-	public function __construct($value='')
+	public function __construct()
 	{
+        parent::__construct();
 		$this->googleLiveBroadcastSnippet = new \Google_Service_YouTube_LiveBroadcastSnippet;
         $this->googleLiveBroadcastStatus = new \Google_Service_YouTube_LiveBroadcastStatus;
         $this->googleYoutubeLiveBroadcast = new \Google_Service_YouTube_LiveBroadcast;	
@@ -23,12 +25,15 @@ class AuthenticateService extends AuthService {
 
 		$token = $this->getToken($code);
 		if (! $token ) {
-		 	return response['error'] ='invalid token';
+		 	 $authResponse['error'] = 'invalid token';
+             return $authResponse;
 		}
 		$authResponse['token'] = $token;
-		$this->setAccessToken($authResponse['token'])
+		$this->setAccessToken($authResponse['token']);
 		$authResponse['channel_details'] = $this->channelDetails();
 		$authResponse['live_streaming_status'] = $this->liveStreamTest($token) ? 'enabled' : 'disbaled';
+
+        return $authResponse;
 	}
 
 
@@ -38,7 +43,7 @@ class AuthenticateService extends AuthService {
 		$params = array_filter($params);
 		$part = 'snippet';
 		$service = new \Google_Service_YouTube($this->client);
-		return $service->channels->listChannels($part,$params)
+		return $service->channels->listChannels($part,$params);
 	}
 
     protected function liveStreamTest($token)
@@ -113,6 +118,31 @@ class AuthenticateService extends AuthService {
             throw new Exception($e->getMessage(), 1);
         }
 
+    }
+
+    public function deleteEvent($youtube_event_id)
+    {
+        try {
+
+            /**
+             * [$service [instance of Google_Service_YouTube]]
+             */
+            $youtube = new \Google_Service_YouTube($this->client);
+            $deleteBroadcastsResponse = $youtube->liveBroadcasts->delete($youtube_event_id);
+            return true;
+
+        } catch (\Google_Service_Exception $e) {
+
+            throw new Exception($e->getMessage(), 1);
+
+        } catch (\Google_Exception $e) {
+
+            throw new Exception($e->getMessage(), 1);
+
+        } catch (Exception $e) {
+
+            throw new Exception($e->getMessage(), 1);
+        }
     }
 
 }

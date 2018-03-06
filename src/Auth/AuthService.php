@@ -12,6 +12,7 @@ class AuthService {
 
 	public function __construct()
 	{
+
 		$this->client = new \Google_Client;
 
 		$this->client->setClientId(\Config::get('google-config.client_id'));

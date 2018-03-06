@@ -1,5 +1,5 @@
 <?php 
-namespace alchemyguy\YoutubeLaravelApi;;
+namespace alchemyguy\YoutubeLaravelApi;
 
 use Exception;
 use Carbon\Carbon;
@@ -20,6 +20,7 @@ class LiveStreamService extends AuthService {
     
     public function __construct()
     {
+        parent::__construct();
         $this->googleLiveBroadcastSnippet = new \Google_Service_YouTube_LiveBroadcastSnippet;
         $this->googleLiveBroadcastStatus = new \Google_Service_YouTube_LiveBroadcastStatus;
         $this->googleYoutubeLiveBroadcast = new \Google_Service_YouTube_LiveBroadcast;

@@ -21,7 +21,8 @@ class VideoService extends AuthService {
 			$service = new \Google_Service_YouTube($this->client);
 			return $service->videos->listVideos($part, $params);
 
-		} catch ( \Google_Service_Exception $e ) {			throw new Exception($e->getMessage(), 1);
+		} catch ( \Google_Service_Exception $e ) {			
+			throw new Exception($e->getMessage(), 1);
 
 		} catch ( \Google_Exception $e ) {
 			throw new Exception($e->getMessage(), 1);
@@ -202,7 +203,7 @@ class VideoService extends AuthService {
 	 * @param  $params       [onbelhalf of owner]
 	 * @return               [json obj response]
 	 */
-	public function deleteVideo($googleToken, $id, $params) 
+	public function deleteVideo($googleToken, $id, $params=[]) 
 	{
 		try {
 
@@ -230,4 +231,37 @@ class VideoService extends AuthService {
 			throw new Exception($e->getMessage(), 1);
 		}
 	}
+
+	/*
+	* [adds like dislike or remove ratiing]
+	*/
+	public function videosRate($googleToken, $id, $rating='like', $params=[]) {
+
+		try {
+			
+			$setAccessToken = $this->setAccessToken($googleToken);
+				if (!$setAccessToken) return false;
+
+			$service = new Google_Service_YouTube($client);
+
+		    $params = array_filter($params);
+		    $response = $service->videos->rate(
+		        $id, $rating,
+		        $params
+		    );
+
+		
+		} catch ( \Google_Service_Exception $e ) {
+			throw new Exception($e->getMessage(), 1);
+
+		} catch ( \Google_Exception $e ) {
+			throw new Exception($e->getMessage(), 1);
+
+		} catch (Exception $e) {
+			throw new Exception($e->getMessage(), 1);
+		}
+	}
+
+
+
 }
