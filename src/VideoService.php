@@ -2,7 +2,6 @@
 namespace alchemyguy\YoutubeLaravelApi;
 
 use Exception;
-use Log;
 use alchemyguy\YoutubeLaravelApi\Auth\AuthService;
 
 class VideoService extends AuthService {

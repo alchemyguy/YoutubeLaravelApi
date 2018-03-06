@@ -15,14 +15,18 @@ class ChannelService extends AuthService {
 	{
 		try {
 
+
 		    $params = array_filter($params);
-			
+
 			/**
 			 * [$service instance of Google_Service_YouTube]
 		     * [$response object of channel lists][making api call to list channels] 
 			 * @var [type]
 			 */
-			$service = new \Google_Service_YouTube($this->client);
+
+			$service = new \Google_Service_YouTube($this->client);            
+            $respone = $service->channels->listChannels($part,$params);
+            
 		    return $service->channels->listChannels($part,$params);
 
 		} catch ( \Google_Service_Exception $e ) {
@@ -32,7 +36,8 @@ class ChannelService extends AuthService {
 			throw new Exception($e->getMessage(), 1);
 		
 		} catch ( Exception $e ) {
-			throw new Exception($e->getMessage(), 1);
+            \Log::info(json_encode($e->getMessage()));
+			throw new Exception(json_encode($e->getMessage()), 1);
 		}
 	}
 
@@ -181,10 +186,9 @@ class ChannelService extends AuthService {
      *
      * properties -  array('snippet.resourceId.kind' => 'youtube#channel','snippet.resourceId.channelId' => 'UCqIOaYtQak4-FD2-yI7hFkw'),
      * part  = 'snippet'
-     * params = array()
      * @param string $value [description]
      */
-    public function addSubscriptions($properties, $part, $params, $token)
+    public function addSubscriptions($properties, $token, $part='snippet', $params=[])
     {
         try {
 
@@ -194,7 +198,7 @@ class ChannelService extends AuthService {
                 return false;
             }
 
-            $service = new Google_Service_YouTube($this->client);
+            $service = new \Google_Service_YouTube($this->client);
 
             $params = array_filter($params);
             $propertyObject = $this->createResource($properties);
@@ -215,7 +219,7 @@ class ChannelService extends AuthService {
 
     }
 
-    public function removeSubscription( $token, $params)
+    public function removeSubscription( $token, $subscriptionId ,$params=[])
     {
         try {
 
@@ -225,11 +229,11 @@ class ChannelService extends AuthService {
                 return false;
             }
 
-            $service = new Google_Service_YouTube($this->client);
+            $service = new \Google_Service_YouTube($this->client);
 
             $params = array_filter($params);
 
-            $response = $service->subscriptions->delete($id, $params);
+            $response = $service->subscriptions->delete($subscriptionId , $params);
 
         } catch (\Google_Service_Exception $e) {
         	throw new Exception($e->getMessage(), 1);

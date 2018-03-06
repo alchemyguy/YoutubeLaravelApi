@@ -3,10 +3,10 @@
 
 ## Features
 
-- [x] Google Auth
-- [x] Full Live Streaming API for Youtube 
-- [x] Full Youtube Channel API
-- [x] Full Youtube Video API
+- [x] [Google Auth](#google-auth)
+- [x] [Full Live Streaming API for Youtube](#full-live-streaming-api) 
+- [x] [Full Youtube Channel API](#full-youtube-channel-api)
+- [x] [Full Youtube Video API](#full-youtube-video-api)
 
 
 ## Installation
@@ -68,7 +68,7 @@ $authUrl = $authObject->getLoginUrl('email','identifier');
 ```
 
 - **Fetching the Auth Code and Identifier**
-Now once the user authorizes by visiting the url, the authcode will be redirected to the redirect_url specified in .env with params as code( this will be auth code) and  state (this will be identifier we added during making the loginUrl)
+	Now once the user authorizes by visiting the url, the authcode will be redirected to the redirect_url specified in .env with params as code( this will be auth code) and  state (this will be identifier we added during making the loginUrl)
 
 ```php
 $code = Input::get('code');
@@ -185,6 +185,150 @@ $ytEventObj->transitionEvent($authToken, $broadcastStatus);	// $broadcastStatus 
 
 
 ### Full Youtube Channel API
+
+- **Add Code to call the api class**
+
+```php
+<?php
+namespace Your\App\NameSpace;
+
+use  alchemyguy\YoutubeLaravelApi\ChannelService;
+```
+
+- **Channel details By Channel Id**
+	If you want channel details for multiple channels add channel id saperated by commas(,) in param
+	`NOTE: This doesn't require authorization token`
+
+```php
+    /**
+     * [channelsListById -gets the channnel details and ]
+     *   $part    'id,snippet,contentDetails,status, statistics, contentOwnerDetails, brandingSettings'
+     *  $params  [array channels id(comma separated ids ) or you can get ('forUsername' => 'GoogleDevelopers')]
+     */
+
+     $part = 'id,snippet';
+     $params = array('id'=> 'channel_1_id,channel_2_id');
+     $channelServiceObject  = new ChannelService;
+	 $channelDetails = $channelServiceObject->channelsListById($part, $params);
+
+```
+
+- **Channel Detail by Token**
+	Channel Details of the users channel which has authorized token
+
+```php 
+	$channelServiceObject  = new ChannelService;
+	$channelDetails = $channelServiceObject->getChannelDetails($authToken);
+```
+
+- **Channel Subscription List**
+	List of subscriptions of the channel
+
+```php
+
+	/*
+	* $params array('channel_id'=>'',
+	*				'max_results'= 10)
+	*/
+	$channelServiceObject  = new ChannelService;
+	$channelDetails = $channelServiceObject->subscriptionByChannelId($params);
+```
+
+- **Add Subscriptions For Authorized Channel**
+
+```php 
+	/*
+	* properties  array('snippet.resourceId.kind' => 'youtube#channel','snippet.resourceId.channelId' => 'UCqIOaYtQak4-FD2-yI7hFkw')
+	*/
+	$channelServiceObject  = new ChannelService;
+	$response = $channelServiceObject->addSubscriptions($properties, $token, $part='snippet', $params=[]);
+
+ ```
+
+-**Remove Subscriptions For Authorized Channel**
+	To remove subscription we need subscription id which can be found from subscription list.
+```php
+	$response = $channelServiceObject->removeSubscription( $token, $subscriptionId);
+
+```
+
+- **Update Channel Branding Settings**
+	Updates the channel details and preferences.
+
+```php
+	/*
+	 *      $properties array('id' => '',
+	 *					'brandingSettings.channel.description' => '',
+	 *					'brandingSettings.channel.keywords' => '',
+	 *					'brandingSettings.channel.defaultLanguage' => '',
+	 *					'brandingSettings.channel.defaultTab' => '',
+	 *					'brandingSettings.channel.moderateComments' => '',
+	 *					'brandingSettings.channel.showRelatedChannels' => '',
+	 *					'brandingSettings.channel.showBrowseView' => '',
+	 *					'brandingSettings.channel.featuredChannelsTitle' => '',
+	 *					'brandingSettings.channel.featuredChannelsUrls[]' => '',
+	 *					'brandingSettings.channel.unsubscribedTrailer' => '')
+	 */
+
+	$channelServiceObject  = new ChannelService;
+	$response = $channelServiceObject->updateChannelBrandingSettings($googleToken, $properties);
+```
+
+### Full Youtube Video API
+
+- **Add Code to call the api class**
+
+```php
+<?php
+namespace Your\App\NameSpace;
+
+use  alchemyguy\YoutubeLaravelApi\VideoService;
+```
+
+- **List Video By Id**
+
+```php
+	$part ='snippet,contentDetails,id,statistics';
+	$params =array('id'=>'xyzgh');
+	$videoServiceObject  = new VideoService;
+	$response = $videoServiceObject->videosListById($part, $params);
+```
+
+- **Upload Video To Your Channel**
+```php
+
+	/*
+	* $videoPath  	path to the video
+	* $data   		array('title'=>"",
+	*					'description'=>"",
+	*					'tags'=>"",
+	*					'category_id'=>"",
+	*					'video_status'=>"")
+	*/
+
+	$videoServiceObject  = new VideoService;
+	$response = $videoServiceObject->uploadVideo($googleToken, $videoPath, $data);
+```
+
+- **Delete Video To Your Channel**
+```php
+	$videoServiceObject  = new VideoService;
+	$response = $videoServiceObject->deleteVideo($googleToken, $videoId) ;
+```
+
+
+- **Rate Video**
+	Adding a like, dislike or removing the response from video
+
+```php
+	# rating  'like' or 'dislike' or 'none'
+ 	$videoServiceObject  = new VideoService;
+	$response = $videoServiceObject->videosRate($googleToken, $videoId, $rating);
+
+```
+
+
+
 
 
 
