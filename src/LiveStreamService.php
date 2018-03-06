@@ -8,8 +8,7 @@ use alchemyguy\YoutubeLaravelApi\Auth\AuthService;
 /**
 *  Api Service For Youtube Live Events
 */
-class LiveStreamService extends AuthService
-{
+class LiveStreamService extends AuthService {
     protected $youtube;
     protected $googleLiveBroadcastSnippet;
     protected $googleLiveBroadcastStatus;
@@ -19,7 +18,7 @@ class LiveStreamService extends AuthService
     protected $googleYoutubeLiveStream;
     protected $googleYoutubeVideoRecordingDetails;
     
-    function __construct()
+    public function __construct()
     {
         $this->googleLiveBroadcastSnippet = new \Google_Service_YouTube_LiveBroadcastSnippet;
         $this->googleLiveBroadcastStatus = new \Google_Service_YouTube_LiveBroadcastStatus;

@@ -6,8 +6,7 @@ use Exception;
 /**
 *  Api Service For Auth
 */
-class AuthService 
-{	
+class AuthService {	
 	protected $client;
 	protected $yt_language;
 

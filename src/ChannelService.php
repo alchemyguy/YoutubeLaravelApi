@@ -4,8 +4,7 @@ namespace alchemyguy\YoutubeLaravelApi;
 use Exception;
 use alchemyguy\YoutubeLaravelApi\Auth\AuthService;
 
-class ChannelService extends AuthService
-{
+class ChannelService extends AuthService {
     /**
      * [channelsListById -gets the channnel details and ]
      * @param  $part    [id,snippet,contentDetails,status, statistics, contentOwnerDetails, brandingSettings]

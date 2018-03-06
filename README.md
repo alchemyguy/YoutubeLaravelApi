@@ -1,7 +1,6 @@
 #  Youtube Laravel Api
  `PHP (Laravel) Package for Google / YouTube API V3 with Google Auth`
 
-
 ## Features
 ```
 - Google Auth
@@ -40,7 +39,54 @@ php artisan vendor:publish --tag='youtube-config'
 7. Then in the Authorized Javascript Origins section add `you site url`.
 8. In the Authorized Redirect URLs section add `add a url which you want the auth code to return`(login callback)
 9. You will get values (to be exact - client_id, client_secret & api_key) 
-10. Then add these values - client_id, client_secret, api_key and login_callback in the env file and you can start using the package now.
+10. Then add these values - client_id, client_secret, api_key and redirect_url in the env file and you can start using the package now.
 
 
+## Usage :
+
+### Google Auth 
+
+	- Add Code to call the api class
+
+```php
+
+<?php
+namespace Your\App\NameSpace;
+
+use  alchemyguy\YoutubeLaravelApi\AuthenticateService;	
+
+```
+
+	- Generating an Auth-Url
+```php
+
+$authObject  = new AuthenticateService;
+
+# Replace the identifier with a unqiue identifier for account or channel
+$authUrl = $authObject->getLoginUrl('email','identifier'); 
+
+```
+
+	- Fetching the Auth Code and Identifier
+Now once the user authorizes by visiting the url, the authcode will be redirected to the redirect_url specified in .env with params as code( this will be auth code) and  state (this will be identifier we added during making the loginUrl)
+
+```php
+$code = Input::get('code');
+$identifier = Input::get('state');
+
+```
+
+	-  Auth-Token and Details For Channel
+
+```php
+$authObject  = new AuthenticateService;
+$authResponse = $authObject->authChannelWithCode($code);
+```
+
+	- This will return an array: 
+```
+$authResponse['token'] (Channel Token)
+$authResponse['channel_details']
+$authResponse['live_streaming_status'] (enabled or disabled)
+```
 

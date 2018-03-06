@@ -5,8 +5,7 @@ use Exception;
 use Log;
 use alchemyguy\YoutubeLaravelApi\Auth\AuthService;
 
-class VideoService extends AuthService
-{
+class VideoService extends AuthService {
 
 	/**
 	 * [videosListById description]
