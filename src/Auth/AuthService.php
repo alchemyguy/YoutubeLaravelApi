@@ -9,10 +9,9 @@ use Exception;
  */
 class AuthService {
 	protected $client;
-	protected $yt_language;
+	protected $ytLanguage;
 
 	public function __construct() {
-		\Log::info('hello');
 		$this->client = new \Google_Client;
 
 		$this->client->setClientId(\Config::get('google-config.client_id'));
@@ -26,7 +25,7 @@ class AuthService {
 
 		$this->client->setAccessType('offline');
 		$this->client->setPrompt('consent');
-		$this->yt_language = \Config::get('google.yt_language');
+		$this->ytLanguage = \Config::get('google.yt_language');
 
 	}
 

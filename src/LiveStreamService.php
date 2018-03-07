@@ -101,19 +101,19 @@ class LiveStreamService extends AuthService {
 			$broadcastsResponse = $youtube->liveBroadcasts->insert('snippet,status', $this->googleYoutubeLiveBroadcast, array());
 			$response['broadcast_response'] = $broadcastsResponse;
 
-			$youtube_event_id = $broadcastsResponse['id'];
+			$youtubeEventId = $broadcastsResponse['id'];
 
 			/**
 			 * set thumbnail to the event
 			 */
 			if (!is_null($thumbnail_path)) {
-				$thumb = $this->uploadThumbnail($thumbnail_path, $youtube_event_id);
+				$thumb = $this->uploadThumbnail($thumbnail_path, $youtubeEventId);
 			}
 
 			/**
 			 * Call the API's videos.list method to retrieve the video resource.
 			 */
-			$listResponse = $youtube->videos->listVideos("snippet", array('id' => $youtube_event_id));
+			$listResponse = $youtube->videos->listVideos("snippet", array('id' => $youtubeEventId));
 			$video = $listResponse[0];
 
 			/**
@@ -122,7 +122,7 @@ class LiveStreamService extends AuthService {
 			$videoSnippet = $video['snippet'];
 			$videoSnippet['tags'] = $data["tag_array"];
 			if (!is_null($language)) {
-				$temp = isset($this->yt_language[$language]) ? $this->yt_language[$language] : "en";
+				$temp = isset($this->ytLanguage[$language]) ? $this->ytLanguage[$language] : "en";
 				$videoSnippet['defaultAudioLanguage'] = $temp;
 				$videoSnippet['defaultLanguage'] = $temp;
 			}
@@ -296,11 +296,11 @@ class LiveStreamService extends AuthService {
 	/**
 	 * [transitionEvent transition the state of event [test, start streaming , stop streaming]]
 	 * @param  [type] $token            [auth token for the channel]
-	 * @param  [type] $youtube_event_id [eventId]
+	 * @param  [type] $youtubeEventId [eventId]
 	 * @param  [type] $broadcastStatus  [transition state - ["testing", "live", "complete"]]
 	 * @return [type]                   [transition status]
 	 */
-	public function transitionEvent($token, $youtube_event_id, $broadcastStatus) {
+	public function transitionEvent($token, $youtubeEventId, $broadcastStatus) {
 		try {
 
 			if (!empty($token)) {
@@ -322,7 +322,7 @@ class LiveStreamService extends AuthService {
 			 */
 			$youtube = new \Google_Service_YouTube($this->client);
 			$liveBroadcasts = $youtube->liveBroadcasts;
-			$transition = $liveBroadcasts->transition($broadcastStatus, $youtube_event_id, $part);
+			$transition = $liveBroadcasts->transition($broadcastStatus, $youtubeEventId, $part);
 			return $transition;
 
 		} catch (\Google_Exception $e) {
@@ -339,10 +339,10 @@ class LiveStreamService extends AuthService {
 	 * [updateBroadcast update the already created event on youtunbe channel]
 	 * @param  [type] $token            [channel auth token]
 	 * @param  [type] $data             [event details]
-	 * @param  [type] $youtube_event_id [eventID]
+	 * @param  [type] $youtubeEventId [eventID]
 	 * @return [type]                   [response array for various process in the update]
 	 */
-	public function updateBroadcast($token, $data, $youtube_event_id) {
+	public function updateBroadcast($token, $data, $youtubeEventId) {
 		try {
 			/**
 			 * [setAccessToken [setting accent token to client]]
@@ -411,7 +411,7 @@ class LiveStreamService extends AuthService {
 			$this->googleYoutubeLiveBroadcast->setSnippet($this->googleLiveBroadcastSnippet);
 			$this->googleYoutubeLiveBroadcast->setStatus($this->googleLiveBroadcastStatus);
 			$this->googleYoutubeLiveBroadcast->setKind('youtube#liveBroadcast');
-			$this->googleYoutubeLiveBroadcast->setId($youtube_event_id);
+			$this->googleYoutubeLiveBroadcast->setId($youtubeEventId);
 
 			/**
 			 * Execute the request [return info about the new broadcast ]
@@ -419,20 +419,18 @@ class LiveStreamService extends AuthService {
 			$broadcastsResponse = $youtube->liveBroadcasts->update('snippet,status',
 				$this->googleYoutubeLiveBroadcast, array());
 
-			$youtube_event_id = $obj->youtube_event_id;
-
 			/**
 			 * set thumbnail
 			 */
 			if (!is_null($thumbnail_path)) {
-				$thumb = $this->uploadThumbnail($thumbnail_path, $youtube_event_id);
+				$thumb = $this->uploadThumbnail($thumbnail_path, $youtubeEventId);
 			}
 
 			/**
 			 * Call the API's videos.list method [retrieve the video resource]
 			 */
 			$listResponse = $youtube->videos->listVideos("snippet",
-				array('id' => $youtube_event_id));
+				array('id' => $youtubeEventId));
 			$video = $listResponse[0];
 			$videoSnippet = $video['snippet'];
 			$videoSnippet['tags'] = $data['tag_array'];
@@ -441,7 +439,7 @@ class LiveStreamService extends AuthService {
 			 * set Language and other details
 			 */
 			if (!is_null($language)) {
-				$temp = isset($this->yt_language[$language]) ? $this->yt_language[$language] : "en";
+				$temp = isset($this->ytLanguage[$language]) ? $this->ytLanguage[$language] : "en";
 				$videoSnippet['defaultAudioLanguage'] = $temp;
 				$videoSnippet['defaultLanguage'] = $temp;
 			}
@@ -458,7 +456,7 @@ class LiveStreamService extends AuthService {
 
 			$response['broadcast_response'] = $updateResponse;
 
-			$youtube_event_id = $updateResponse['id'];
+			$youtubeEventId = $updateResponse['id'];
 
 			$this->googleYoutubeLiveStreamSnippet->setTitle($title);
 
@@ -513,10 +511,10 @@ class LiveStreamService extends AuthService {
 	/**
 	 * [deleteEvent delete an event created in youtube]
 	 * @param  [type] $token            [auth token for channel]
-	 * @param  [type] $youtube_event_id [eventID]
+	 * @param  [type] $youtubeEventId [eventID]
 	 * @return [type]                   [deleteBroadcastsResponse]
 	 */
-	public function deleteEvent($token, $youtube_event_id) {
+	public function deleteEvent($token, $youtubeEventId) {
 		try {
 			/**
 			 * [setAccessToken [setting accent token to client]]
@@ -531,7 +529,7 @@ class LiveStreamService extends AuthService {
 			 * @var [type]
 			 */
 			$youtube = new \Google_Service_YouTube($this->client);
-			$deleteBroadcastsResponse = $youtube->liveBroadcasts->delete($youtube_event_id);
+			$deleteBroadcastsResponse = $youtube->liveBroadcasts->delete($youtubeEventId);
 
 			return $deleteBroadcastsResponse;
 

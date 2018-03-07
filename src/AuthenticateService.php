@@ -92,13 +92,13 @@ class AuthenticateService extends AuthService {
 			 */
 			$broadcastsResponse = $youtube->liveBroadcasts->insert('snippet,status', $this->googleYoutubeLiveBroadcast, array());
 			$response['broadcast_response'] = $broadcastsResponse;
-			$youtube_event_id = isset($broadcastsResponse['id']) ? $broadcastsResponse['id'] : false;
+			$youtubeEventId = isset($broadcastsResponse['id']) ? $broadcastsResponse['id'] : false;
 
-			if (!$youtube_event_id) {
+			if (!$youtubeEventId) {
 				return false;
 			}
 
-			$this->deleteEvent($youtube_event_id);
+			$this->deleteEvent($youtubeEventId);
 			return true;
 
 		} catch (\Google_Service_Exception $e) {
@@ -116,14 +116,14 @@ class AuthenticateService extends AuthService {
 
 	}
 
-	public function deleteEvent($youtube_event_id) {
+	public function deleteEvent($youtubeEventId) {
 		try {
 
 			/**
 			 * [$service [instance of Google_Service_YouTube]]
 			 */
 			$youtube = new \Google_Service_YouTube($this->client);
-			$deleteBroadcastsResponse = $youtube->liveBroadcasts->delete($youtube_event_id);
+			$deleteBroadcastsResponse = $youtube->liveBroadcasts->delete($youtubeEventId);
 			return true;
 
 		} catch (\Google_Service_Exception $e) {
