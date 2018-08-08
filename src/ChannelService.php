@@ -195,7 +195,7 @@ class ChannelService extends AuthService {
 			$params = array_filter($params);
 			$propertyObject = $this->createResource($properties);
 
-			$resource = new Google_Service_YouTube_Subscription($propertyObject);
+			$resource = new \Google_Service_YouTube_Subscription($propertyObject);
 			$response = $service->subscriptions->insert($part, $resource, $params);
 			return $response;
 
