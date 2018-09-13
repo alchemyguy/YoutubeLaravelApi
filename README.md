@@ -12,7 +12,7 @@
 ## Installation
  
 ```shell
-composer require alchemyguy/YoutubeLaravelApi
+composer require alchemyguy/youtube-laravel-api
 ```
 
 Add Service provider to config/app.php provider's array:
