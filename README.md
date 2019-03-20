@@ -169,7 +169,7 @@ $ytEventObj = new LiveStreamService();
  * 3. If transitioEvent() returns successfull for testing broadcast status, then start live streaming your video by passing $broadcastStatus="live" 
  * & in response it will return us the stream status.
  */ 
-$streamStatus = $ytEventObj->transitionEvent($authToken, $broadcastStatus);	
+$streamStatus = $ytEventObj->transitionEvent($authToken, $youtubeEventId, $broadcastStatus);	
 ```
 
 - **Stopping a Youtube Event Stream**
@@ -180,7 +180,7 @@ $ytEventObj = new LiveStreamService();
  * $broadcastStatus - ["complete"]
  * Once live streaming gets started succesfully. We can stop the streaming the video by passing broadcastStatus="complete" and in response it will give us the stream status.
  */
-$ytEventObj->transitionEvent($authToken, $broadcastStatus);	// $broadcastStatus = ["complete"]
+$ytEventObj->transitionEvent($authToken, $youtubeEventId, $broadcastStatus);	// $broadcastStatus = ["complete"]
 ```
 
 
