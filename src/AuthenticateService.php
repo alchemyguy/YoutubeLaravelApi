@@ -103,9 +103,12 @@ class AuthenticateService extends AuthService {
 
 		} catch (\Google_Service_Exception $e) {
 
-            $error = $e->getErrors()[0] ?? [];
-            if ($error["domain"] ?? "" == "youtube.liveBroadcast" && $error["reason"] ?? "" == "livePermissionBlocked") {
-                return false;
+            $errors = $e->getErrors();
+            if (!empty($errors[0])) {
+                $error = $errors[0];
+                if (!empty($error["domain"]) && !empty($error["reason"]) && $error["domain"] == "youtube.liveBroadcast" && $error["reason"] == "livePermissionBlocked") {
+                    return false;
+                }
             }
 			throw new Exception($e->getMessage(), 1);
 
