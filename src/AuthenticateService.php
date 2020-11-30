@@ -102,8 +102,11 @@ class AuthenticateService extends AuthService {
 			return true;
 
 		} catch (\Google_Service_Exception $e) {
-
-			throw new Exception($e->getMessage(), 1);
+			/**
+			 *  This error is thrown if the Service is 
+			 * 	either not available or not enabled for the specific account
+			 */
+			return false;
 
 		} catch (\Google_Exception $e) {
 
