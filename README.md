@@ -227,8 +227,10 @@ $channelDetails = $channelServiceObject->getChannelDetails($authToken);
 ```php
 
 /*
-* $params array('channel_id'=>'',
-*				'max_results'= 10)
+* $params array('channelId'=>'', 'totalResults'= 10)
+* totalResults is different of maxResults from Google Api.
+* totalResults = the amount of results you want
+* maxResults = max of results PER PAGE. We don't need this parameter here since it will loop until it gets all the results you want.
 */
 $channelServiceObject  = new ChannelService;
 $channelDetails = $channelServiceObject->subscriptionByChannelId($params);
