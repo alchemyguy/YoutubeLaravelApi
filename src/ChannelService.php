@@ -110,9 +110,9 @@ class ChannelService extends AuthService {
 	}
 
 	/**
-	 * [parseSubscriptions modified for backUp]
+	 * [parseSubscriptions working]
 	 * @param  [type] $part
-	 * @return [type] $params          array('channelId'= '', "maxResults"='' )
+	 * @return [type] $params          array('channelId'= '', 'totalResults'= '')
 	 */
 	public function subscriptionByChannelId($params, $part = 'snippet') {
 		try {
@@ -120,7 +120,7 @@ class ChannelService extends AuthService {
 			$params = array_filter($params);
 
 			$service = new \Google_Service_YouTube($this->client);
-			return $service->subscriptions->listSubscriptions($part, $params);
+			return $this->parseSubscriptions($params);
 
 		} catch (\Google_Service_Exception $e) {
 			throw new Exception($e->getMessage(), 1);
@@ -134,31 +134,37 @@ class ChannelService extends AuthService {
 	}
 
 	/**
-	 * [parseSubscriptions modified for backUp]
+	 * [parseSubscriptions working]
 	 * @param  [type] $channelId [description]
 	 * @return [type]            [description]
 	 */
-	public function parseSubscriptions($channelId, $token) {
-
+	public function parseSubscriptions($params) {
+		$channelId = $params['channelId'];
+		$totalResults = $params['totalResults'];
+		$maxResultsPerPage = 50;
+		if($totalResults < 1){$totalResults = 0;}
+		$maxPages = ($totalResults - ($totalResults % $maxResultsPerPage))/$maxResultsPerPage + 1;
+		$i = 0;
 		try {
-			if (!$this->setAccessToken($token)) {
-				return false;
-			}
-
 			$service = new \Google_Service_YouTube($this->client);
-			$part = "snippet";
-			$params = array('channelId' => $channelId, "maxResults" => 20);
+			$part = 'snippet';
+			$params = array('channelId' => $channelId, 'maxResults' => $maxResultsPerPage);
 			$nextPageToken = 1;
 			$subscriptions = [];
-			while ($nextPageToken) {
+			while ($nextPageToken and $i < $maxPages) {
+				if($i == $maxPages-1){
+					$params['maxResults'] = $totalResults % $maxResultsPerPage + 2;
+				}
+
 				$response = $service->subscriptions->listSubscriptions($part, $params);
 				$response = json_decode(json_encode($response), true);
 				$sub = array_column($response['items'], 'snippet');
 				$sub2 = array_column($sub, 'resourceId');
 				$subscriptions = array_merge($subscriptions, $sub2);
+				$nextPageToken = isset($response['nextPageToken']) ? $response['nextPageToken'] : false;
 
-				$nextPageToken = isset($response["nextPageToken"]) ? $response['nextPageToken'] : false;
 				$params['pageToken'] = $nextPageToken;
+				$i++;
 			}
 
 			return $subscriptions;

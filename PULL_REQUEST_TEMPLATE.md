@@ -2,42 +2,35 @@
 
 ## Description
 
-Describe your changes in detail.
+The function **subscriptionByChannelId** didn't work properly. It was getting always the first 50 results and the user could not get more or less. The parameter 'maxResults' didn't do anything.
+
+I reactivated the function **parseSubscriptions** and fixed it to get the desired amount of results instead of all of them.
+
+To avoid confuision, the parameters is passed now as **totalResults** instead of **maxResults** since the last is the Google Api's parameter for each page, which can only be set up to 50
+
+The Read Me was updated
 
 ## Motivation and context
 
-Why is this change required? What problem does it solve?
-
-If it fixes an open issue, please link to the issue here (if you write `fixes #num`
-or `closes #num`, the issue will be automatically closed when the pull is accepted.)
+User was not able to get results off the first page
 
 ## How has this been tested?
 
-Please describe in detail how you tested your changes.
-
-Include details of your testing environment, and the tests you ran to
-see how your change affects other areas of the code, etc.
+I listed my own channel subscriptions
 
 ## Screenshots (if appropriate)
 
 ## Types of changes
 
-What types of changes does your code introduce? Put an `x` in all the boxes that apply:
 - [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
+- [X] New feature (non-breaking change which adds functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to change)
 
 ## Checklist:
 
-Go over all the following points, and put an `x` in all the boxes that apply.
-
-Please, please, please, don't send your pull request until all of the boxes are ticked. Once your pull request is created, it will trigger a build on our [continuous integration](http://www.phptherightway.com/#continuous-integration) server to make sure your [tests and code style pass](https://help.github.com/articles/about-required-status-checks/).
-
-- [ ] I have read the **[CONTRIBUTING](CONTRIBUTING.md)** document.
-- [ ] My pull request addresses exactly one patch/feature.
-- [ ] I have created a branch for this patch/feature.
-- [ ] Each individual commit in the pull request is meaningful.
-- [ ] I have added tests to cover my changes.
-- [ ] If my change requires a change to the documentation, I have updated it accordingly.
-
-If you're unsure about any of these, don't hesitate to ask. We're here to help!
+- [X] I have read the **[CONTRIBUTING](CONTRIBUTING.md)** document.
+- [X] My pull request addresses exactly one patch/feature.
+- [X] I have created a branch for this patch/feature.
+- [X] Each individual commit in the pull request is meaningful.
+- [X] I have added tests to cover my changes.
+- [X] If my change requires a change to the documentation, I have updated it accordingly.
