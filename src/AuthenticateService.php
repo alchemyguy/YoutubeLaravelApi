@@ -30,7 +30,7 @@ class AuthenticateService extends AuthService {
 		$authResponse['token'] = $token;
 		$this->setAccessToken($authResponse['token']);
 		$authResponse['channel_details'] = $this->channelDetails();
-		$authResponse['live_streaming_status'] = $this->liveStreamTest($token) ? 'enabled' : 'disbaled';
+		$authResponse['live_streaming_status'] = $this->liveStreamTest($token) ? 'enabled' : 'disabled';
 
 		return $authResponse;
 	}
