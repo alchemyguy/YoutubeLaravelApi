@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Alchemyguy\YoutubeLaravelApi\Services;
 
+use Alchemyguy\YoutubeLaravelApi\DTOs\BrandingProperties;
+use Alchemyguy\YoutubeLaravelApi\Support\ResourceBuilder;
 use Google\Service\YouTube;
 
 class ChannelService extends BaseService
@@ -109,5 +111,17 @@ class ChannelService extends BaseService
     {
         $this->authorize($token);
         $this->call(fn () => $this->youtube()->subscriptions->delete($subscriptionId));
+    }
+
+    /** @param array<string, mixed> $token */
+    public function updateBranding(array $token, BrandingProperties $properties): void
+    {
+        $this->authorize($token);
+        $this->call(function () use ($properties): void {
+            $resource = new \Google\Service\YouTube\Channel(
+                ResourceBuilder::fromProperties($properties->toDottedArray())
+            );
+            $this->youtube()->channels->update('brandingSettings', $resource, []);
+        });
     }
 }

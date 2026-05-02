@@ -157,4 +157,32 @@ final class ChannelServiceTest extends TestCase
 
         $svc->unsubscribe(['access_token' => 'tok'], 'sub-id-1');
     }
+
+    public function test_update_branding_calls_channels_update_with_resource(): void
+    {
+        $channels = Mockery::mock(\Google\Service\YouTube\Resource\Channels::class);
+        $channels->shouldReceive('update')->once()->withArgs(function ($part, $resource, $params) {
+            return $part === 'brandingSettings'
+                && $resource instanceof \Google\Service\YouTube\Channel;
+        })->andReturn((object) ['id' => 'UC1']);
+
+        $youtube = Mockery::mock(YouTube::class);
+        $youtube->channels = $channels;
+
+        $oauth = Mockery::mock(\Alchemyguy\YoutubeLaravelApi\Auth\OAuthService::class);
+        $oauth->shouldReceive('setAccessToken')->once();
+
+        $svc = new class($oauth) extends ChannelService {
+            public ?YouTube $injected = null;
+            protected function youtube(): YouTube { return $this->injected; }
+        };
+        $svc->injected = $youtube;
+
+        $props = new \Alchemyguy\YoutubeLaravelApi\DTOs\BrandingProperties(
+            channelId: 'UC1',
+            description: 'new desc',
+            keywords: 'a,b',
+        );
+        $svc->updateBranding(['access_token' => 'tok'], $props);
+    }
 }
