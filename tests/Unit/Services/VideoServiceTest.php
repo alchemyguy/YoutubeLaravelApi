@@ -98,4 +98,34 @@ final class VideoServiceTest extends TestCase
 
         $svc->rate(['access_token' => 'tok'], 'vid1', \Alchemyguy\YoutubeLaravelApi\Enums\Rating::Like);
     }
+
+    public function test_upload_resets_defer_in_finally_even_on_exception(): void
+    {
+        $client = Mockery::mock(Client::class);
+        $client->shouldReceive('setDefer')->ordered()->once()->with(true);
+        $client->shouldReceive('setDefer')->ordered()->once()->with(false); // must be called even on failure
+        $client->shouldReceive('isAccessTokenExpired')->andReturn(false);
+        $client->shouldReceive('setAccessToken')->once();
+
+        $videos = Mockery::mock(Videos::class);
+        $videos->shouldReceive('insert')->andThrow(new \Google\Service\Exception('boom'));
+        $youtube = Mockery::mock(YouTube::class);
+        $youtube->videos = $videos;
+
+        $svc = new class(new OAuthService($client)) extends VideoService {
+            public ?YouTube $injected = null;
+            protected function youtube(): YouTube { return $this->injected; }
+        };
+        $svc->injected = $youtube;
+
+        $this->expectException(\Alchemyguy\YoutubeLaravelApi\Exceptions\YoutubeApiException::class);
+        $svc->upload(
+            ['access_token' => 'tok'],
+            __DIR__ . '/../../Fixtures/test_video.txt',
+            new \Alchemyguy\YoutubeLaravelApi\DTOs\VideoUploadData(
+                'title', 'desc', '22',
+                \Alchemyguy\YoutubeLaravelApi\Enums\PrivacyStatus::Public
+            ),
+        );
+    }
 }
