@@ -8,6 +8,7 @@ use Alchemyguy\YoutubeLaravelApi\Exceptions\LiveStreamingNotEnabledException;
 use Alchemyguy\YoutubeLaravelApi\Exceptions\QuotaExceededException;
 use Alchemyguy\YoutubeLaravelApi\Exceptions\YoutubeApiException;
 use Alchemyguy\YoutubeLaravelApi\Exceptions\YoutubeException;
+use Google\Service\Exception;
 
 it('makes YoutubeException extend RuntimeException', function () {
     expect(new YoutubeException('x'))->toBeInstanceOf(RuntimeException::class);
@@ -28,7 +29,7 @@ it('preserves previous exception in YoutubeApiException', function () {
 });
 
 it('exposes Google service errors via YoutubeApiException::fromGoogleException', function () {
-    $googleErr = new Google\Service\Exception('quota exceeded', 403, null, [
+    $googleErr = new Exception('quota exceeded', 403, null, [
         ['reason' => 'quotaExceeded', 'message' => 'Daily Limit Exceeded'],
     ]);
     $wrapped = YoutubeApiException::fromGoogleException($googleErr);
@@ -37,7 +38,7 @@ it('exposes Google service errors via YoutubeApiException::fromGoogleException',
 });
 
 it('wraps non-quota Google errors as YoutubeApiException', function () {
-    $googleErr = new Google\Service\Exception('not found', 404, null, [
+    $googleErr = new Exception('not found', 404, null, [
         ['reason' => 'videoNotFound'],
     ]);
     $wrapped = YoutubeApiException::fromGoogleException($googleErr);

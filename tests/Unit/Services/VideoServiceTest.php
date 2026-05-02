@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace Alchemyguy\YoutubeLaravelApi\Tests\Unit\Services;
 
 use Alchemyguy\YoutubeLaravelApi\Auth\OAuthService;
+use Alchemyguy\YoutubeLaravelApi\DTOs\VideoUploadData;
+use Alchemyguy\YoutubeLaravelApi\Enums\PrivacyStatus;
+use Alchemyguy\YoutubeLaravelApi\Enums\Rating;
+use Alchemyguy\YoutubeLaravelApi\Exceptions\YoutubeApiException;
 use Alchemyguy\YoutubeLaravelApi\Services\VideoService;
 use Alchemyguy\YoutubeLaravelApi\Tests\TestCase;
 use Google\Client;
+use Google\Service\Exception;
 use Google\Service\YouTube;
-use Google\Service\YouTube\Resource\Videos;
 use Google\Service\YouTube\Resource\Search;
+use Google\Service\YouTube\Resource\Videos;
 use Mockery;
 
 final class VideoServiceTest extends TestCase
@@ -31,9 +36,14 @@ final class VideoServiceTest extends TestCase
         $youtube = Mockery::mock(YouTube::class);
         $youtube->videos = $videos;
 
-        $svc = new class(new OAuthService(Mockery::mock(Client::class))) extends VideoService {
+        $svc = new class(new OAuthService(Mockery::mock(Client::class))) extends VideoService
+        {
             public ?YouTube $injected = null;
-            protected function youtube(): YouTube { return $this->injected; }
+
+            protected function youtube(): YouTube
+            {
+                return $this->injected;
+            }
         };
         $svc->injected = $youtube;
 
@@ -51,9 +61,14 @@ final class VideoServiceTest extends TestCase
         $youtube = Mockery::mock(YouTube::class);
         $youtube->search = $search;
 
-        $svc = new class(new OAuthService(Mockery::mock(Client::class))) extends VideoService {
+        $svc = new class(new OAuthService(Mockery::mock(Client::class))) extends VideoService
+        {
             public ?YouTube $injected = null;
-            protected function youtube(): YouTube { return $this->injected; }
+
+            protected function youtube(): YouTube
+            {
+                return $this->injected;
+            }
         };
         $svc->injected = $youtube;
 
@@ -70,9 +85,14 @@ final class VideoServiceTest extends TestCase
         $oauth = Mockery::mock(OAuthService::class);
         $oauth->shouldReceive('setAccessToken')->once();
 
-        $svc = new class($oauth) extends VideoService {
+        $svc = new class($oauth) extends VideoService
+        {
             public ?YouTube $injected = null;
-            protected function youtube(): YouTube { return $this->injected; }
+
+            protected function youtube(): YouTube
+            {
+                return $this->injected;
+            }
         };
         $svc->injected = $youtube;
 
@@ -90,13 +110,18 @@ final class VideoServiceTest extends TestCase
         $oauth = Mockery::mock(OAuthService::class);
         $oauth->shouldReceive('setAccessToken')->once();
 
-        $svc = new class($oauth) extends VideoService {
+        $svc = new class($oauth) extends VideoService
+        {
             public ?YouTube $injected = null;
-            protected function youtube(): YouTube { return $this->injected; }
+
+            protected function youtube(): YouTube
+            {
+                return $this->injected;
+            }
         };
         $svc->injected = $youtube;
 
-        $svc->rate(['access_token' => 'tok'], 'vid1', \Alchemyguy\YoutubeLaravelApi\Enums\Rating::Like);
+        $svc->rate(['access_token' => 'tok'], 'vid1', Rating::Like);
     }
 
     public function test_upload_resets_defer_in_finally_even_on_exception(): void
@@ -108,23 +133,28 @@ final class VideoServiceTest extends TestCase
         $client->shouldReceive('setAccessToken')->once();
 
         $videos = Mockery::mock(Videos::class);
-        $videos->shouldReceive('insert')->andThrow(new \Google\Service\Exception('boom'));
+        $videos->shouldReceive('insert')->andThrow(new Exception('boom'));
         $youtube = Mockery::mock(YouTube::class);
         $youtube->videos = $videos;
 
-        $svc = new class(new OAuthService($client)) extends VideoService {
+        $svc = new class(new OAuthService($client)) extends VideoService
+        {
             public ?YouTube $injected = null;
-            protected function youtube(): YouTube { return $this->injected; }
+
+            protected function youtube(): YouTube
+            {
+                return $this->injected;
+            }
         };
         $svc->injected = $youtube;
 
-        $this->expectException(\Alchemyguy\YoutubeLaravelApi\Exceptions\YoutubeApiException::class);
+        $this->expectException(YoutubeApiException::class);
         $svc->upload(
             ['access_token' => 'tok'],
             __DIR__ . '/../../Fixtures/test_video.txt',
-            new \Alchemyguy\YoutubeLaravelApi\DTOs\VideoUploadData(
+            new VideoUploadData(
                 'title', 'desc', '22',
-                \Alchemyguy\YoutubeLaravelApi\Enums\PrivacyStatus::Public
+                PrivacyStatus::Public
             ),
         );
     }

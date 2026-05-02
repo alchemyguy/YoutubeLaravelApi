@@ -10,6 +10,7 @@ use Alchemyguy\YoutubeLaravelApi\Exceptions\YoutubeApiException;
 use Alchemyguy\YoutubeLaravelApi\Services\BaseService;
 use Alchemyguy\YoutubeLaravelApi\Tests\TestCase;
 use Google\Client;
+use Google\Service\Exception;
 use Mockery;
 
 final class BaseServiceTest extends TestCase
@@ -23,7 +24,7 @@ final class BaseServiceTest extends TestCase
     public function test_constructs_with_explicit_oauth_service(): void
     {
         $oauth = Mockery::mock(OAuthService::class);
-        $svc = new class ($oauth) extends BaseService {};
+        $svc = new class($oauth) extends BaseService {};
         $this->assertSame($oauth, $svc->oauth());
     }
 
@@ -43,20 +44,28 @@ final class BaseServiceTest extends TestCase
 
     public function test_call_wraps_google_quota_exception_as_quota_exceeded(): void
     {
-        $svc = new class extends BaseService {
-            public function run(\Closure $fn): mixed { return $this->call($fn); }
+        $svc = new class extends BaseService
+        {
+            public function run(\Closure $fn): mixed
+            {
+                return $this->call($fn);
+            }
         };
 
         $this->expectException(QuotaExceededException::class);
-        $svc->run(fn () => throw new \Google\Service\Exception(
+        $svc->run(fn () => throw new Exception(
             'quota exceeded', 403, null, [['reason' => 'quotaExceeded']]
         ));
     }
 
     public function test_call_wraps_other_throwables_as_youtube_api_exception(): void
     {
-        $svc = new class extends BaseService {
-            public function run(\Closure $fn): mixed { return $this->call($fn); }
+        $svc = new class extends BaseService
+        {
+            public function run(\Closure $fn): mixed
+            {
+                return $this->call($fn);
+            }
         };
 
         $this->expectException(YoutubeApiException::class);

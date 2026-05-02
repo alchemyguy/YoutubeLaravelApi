@@ -20,19 +20,20 @@ class StreamManager
     /** @return array<string, mixed> */
     public function insert(string $title, string $format = '720p', string $ingestionType = 'rtmp'): array
     {
-        $snippet = new LiveStreamSnippet();
+        $snippet = new LiveStreamSnippet;
         $snippet->setTitle($title);
 
-        $cdn = new CdnSettings();
+        $cdn = new CdnSettings;
         $cdn->setFormat($format);
         $cdn->setIngestionType($ingestionType);
 
-        $stream = new LiveStream();
+        $stream = new LiveStream;
         $stream->setSnippet($snippet);
         $stream->setCdn($cdn);
         $stream->setKind('youtube#liveStream');
 
         $resp = $this->streams->insert('snippet,cdn', $stream, []);
+
         return $this->decode($resp);
     }
 
@@ -44,6 +45,7 @@ class StreamManager
             'id,contentDetails',
             ['streamId' => $streamId]
         );
+
         return $this->decode($resp);
     }
 
@@ -56,6 +58,7 @@ class StreamManager
         if (is_array($resp)) {
             return $resp;
         }
+
         return (array) json_decode(json_encode($resp, JSON_THROW_ON_ERROR), true, flags: JSON_THROW_ON_ERROR);
     }
 }

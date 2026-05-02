@@ -17,6 +17,7 @@ class YoutubeLaravelApiServiceProvider extends ServiceProvider
         $this->app->singleton(YoutubeClientFactory::class, function ($app): YoutubeClientFactory {
             /** @var Repository $config */
             $config = $app->make('config');
+
             return new YoutubeClientFactory($config->get('youtube', []));
         });
     }

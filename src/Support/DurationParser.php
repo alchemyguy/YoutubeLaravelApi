@@ -19,6 +19,7 @@ final class DurationParser
             ['', '$1 Hours ', '$1 Minutes ', '$1 Seconds'],
             $iso
         );
+
         return trim((string) $out);
     }
 }

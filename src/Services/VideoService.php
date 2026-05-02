@@ -27,6 +27,7 @@ class VideoService extends BaseService
     public function listById(array $params, string $part = 'snippet,contentDetails,id,statistics'): array
     {
         $params = array_filter($params, static fn ($v) => $v !== null && $v !== '');
+
         return $this->call(fn () => (array) $this->youtube()->videos->listVideos($part, $params));
     }
 
@@ -37,6 +38,7 @@ class VideoService extends BaseService
     public function search(array $params, string $part = 'snippet,id'): array
     {
         $params = array_filter($params, static fn ($v) => $v !== null && $v !== '');
+
         return $this->call(fn () => (array) $this->youtube()->search->listSearch($part, $params));
     }
 
@@ -62,23 +64,23 @@ class VideoService extends BaseService
      */
     public function upload(array $token, string $videoPath, VideoUploadData $data): array
     {
-        if (!is_file($videoPath)) {
+        if (! is_file($videoPath)) {
             throw new ConfigurationException("Video file not found: {$videoPath}");
         }
 
         $this->authorize($token);
         $client = $this->client();
 
-        $snippet = new VideoSnippet();
+        $snippet = new VideoSnippet;
         $snippet->setTitle($data->title);
         $snippet->setDescription($data->description);
         $snippet->setTags($data->tags);
         $snippet->setCategoryId($data->categoryId);
 
-        $status = new VideoStatus();
+        $status = new VideoStatus;
         $status->setPrivacyStatus($data->privacyStatus->value);
 
-        $video = new Video();
+        $video = new Video;
         $video->setSnippet($snippet);
         $video->setStatus($status);
 
@@ -102,7 +104,7 @@ class VideoService extends BaseService
                 }
                 try {
                     $status = false;
-                    while (!$status && !feof($handle)) {
+                    while (! $status && ! feof($handle)) {
                         $chunk = fread($handle, $data->chunkSizeBytes);
                         if ($chunk === false) {
                             throw new ConfigurationException('Failed to read video chunk');
@@ -112,6 +114,7 @@ class VideoService extends BaseService
                 } finally {
                     fclose($handle);
                 }
+
                 return is_array($status) ? $status : (array) json_decode(json_encode($status, JSON_THROW_ON_ERROR), true, flags: JSON_THROW_ON_ERROR);
             });
         } finally {

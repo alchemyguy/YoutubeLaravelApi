@@ -6,6 +6,4 @@ namespace Alchemyguy\YoutubeLaravelApi\Exceptions;
 
 use RuntimeException;
 
-class YoutubeException extends RuntimeException
-{
-}
+class YoutubeException extends RuntimeException {}

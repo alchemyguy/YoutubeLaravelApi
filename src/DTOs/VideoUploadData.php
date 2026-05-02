@@ -32,10 +32,11 @@ final readonly class VideoUploadData
     public static function fromArray(array $data): self
     {
         foreach (['title', 'description', 'category_id', 'video_status'] as $key) {
-            if (!isset($data[$key])) {
+            if (! isset($data[$key])) {
                 throw new InvalidArgumentException("Missing required field: {$key}");
             }
         }
+
         return new self(
             title: (string) $data['title'],
             description: (string) $data['description'],

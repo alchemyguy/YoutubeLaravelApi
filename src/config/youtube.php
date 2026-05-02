@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 return [
-    'app_name'      => env('YOUTUBE_APP_NAME', 'YoutubeLaravelApi'),
-    'client_id'     => env('YOUTUBE_CLIENT_ID'),
+    'app_name' => env('YOUTUBE_APP_NAME', 'YoutubeLaravelApi'),
+    'client_id' => env('YOUTUBE_CLIENT_ID'),
     'client_secret' => env('YOUTUBE_CLIENT_SECRET'),
-    'api_key'       => env('YOUTUBE_API_KEY'),
-    'redirect_url'  => env('YOUTUBE_REDIRECT_URL'),
+    'api_key' => env('YOUTUBE_API_KEY'),
+    'redirect_url' => env('YOUTUBE_REDIRECT_URL'),
 
     /*
     |--------------------------------------------------------------------------

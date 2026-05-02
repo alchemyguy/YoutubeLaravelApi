@@ -8,6 +8,7 @@ use Alchemyguy\YoutubeLaravelApi\Auth\OAuthService;
 use Alchemyguy\YoutubeLaravelApi\Services\AuthenticateService;
 use Alchemyguy\YoutubeLaravelApi\Tests\TestCase;
 use Google\Client;
+use Google\Service\Exception;
 use Google\Service\YouTube;
 use Google\Service\YouTube\Resource\Channels;
 use Google\Service\YouTube\Resource\LiveBroadcasts;
@@ -62,7 +63,7 @@ final class AuthenticateServiceTest extends TestCase
 
         $broadcasts = Mockery::mock(LiveBroadcasts::class);
         $broadcasts->shouldReceive('listLiveBroadcasts')->andThrow(
-            new \Google\Service\Exception('liveStreamingNotEnabled', 403, null, [['reason' => 'liveStreamingNotEnabled']])
+            new Exception('liveStreamingNotEnabled', 403, null, [['reason' => 'liveStreamingNotEnabled']])
         );
 
         $youtube = Mockery::mock(YouTube::class);

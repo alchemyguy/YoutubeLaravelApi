@@ -21,6 +21,7 @@ class BroadcastManager
     {
         $broadcast = $this->buildResource($data);
         $resp = $this->broadcasts->insert('snippet,status', $broadcast, []);
+
         return $this->decode($resp);
     }
 
@@ -30,6 +31,7 @@ class BroadcastManager
         $broadcast = $this->buildResource($data);
         $broadcast->setId($broadcastId);
         $resp = $this->broadcasts->update('snippet,status', $broadcast, []);
+
         return $this->decode($resp);
     }
 
@@ -48,6 +50,7 @@ class BroadcastManager
             $broadcastId,
             'status,id,snippet'
         );
+
         return $this->decode($resp);
     }
 
@@ -58,7 +61,7 @@ class BroadcastManager
 
     private function buildResource(BroadcastData $data): LiveBroadcast
     {
-        $snippet = new LiveBroadcastSnippet();
+        $snippet = new LiveBroadcastSnippet;
         $snippet->setTitle($data->title);
         $snippet->setDescription($data->description);
         $snippet->setScheduledStartTime($data->scheduledStartTime->format(DATE_ATOM));
@@ -66,10 +69,10 @@ class BroadcastManager
             $snippet->setScheduledEndTime($data->scheduledEndTime->format(DATE_ATOM));
         }
 
-        $status = new LiveBroadcastStatus();
+        $status = new LiveBroadcastStatus;
         $status->setPrivacyStatus($data->privacyStatus->value);
 
-        $broadcast = new LiveBroadcast();
+        $broadcast = new LiveBroadcast;
         $broadcast->setSnippet($snippet);
         $broadcast->setStatus($status);
         $broadcast->setKind('youtube#liveBroadcast');
@@ -86,6 +89,7 @@ class BroadcastManager
         if (is_array($resp)) {
             return $resp;
         }
+
         return (array) json_decode(json_encode($resp, JSON_THROW_ON_ERROR), true, flags: JSON_THROW_ON_ERROR);
     }
 }

@@ -6,6 +6,8 @@ namespace Alchemyguy\YoutubeLaravelApi\Tests\Unit;
 
 use Alchemyguy\YoutubeLaravelApi\Support\YoutubeClientFactory;
 use Alchemyguy\YoutubeLaravelApi\Tests\TestCase;
+use Alchemyguy\YoutubeLaravelApi\YoutubeLaravelApiServiceProvider;
+use Illuminate\Support\ServiceProvider;
 
 final class ServiceProviderTest extends TestCase
 {
@@ -25,8 +27,8 @@ final class ServiceProviderTest extends TestCase
 
     public function test_publishes_config_under_youtube_config_tag(): void
     {
-        $paths = \Illuminate\Support\ServiceProvider::pathsToPublish(
-            \Alchemyguy\YoutubeLaravelApi\YoutubeLaravelApiServiceProvider::class,
+        $paths = ServiceProvider::pathsToPublish(
+            YoutubeLaravelApiServiceProvider::class,
             'youtube-config'
         );
         $this->assertNotEmpty($paths);

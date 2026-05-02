@@ -17,12 +17,12 @@ abstract class TestCase extends Orchestra
     protected function defineEnvironment($app): void
     {
         $app['config']->set('youtube', [
-            'app_name'     => 'TestApp',
-            'client_id'    => 'test-client-id',
-            'client_secret'=> 'test-client-secret',
-            'api_key'      => 'test-api-key',
+            'app_name' => 'TestApp',
+            'client_id' => 'test-client-id',
+            'client_secret' => 'test-client-secret',
+            'api_key' => 'test-api-key',
             'redirect_url' => 'http://localhost/callback',
-            'languages'    => ['English' => 'en', 'French' => 'fr'],
+            'languages' => ['English' => 'en', 'French' => 'fr'],
         ]);
     }
 }

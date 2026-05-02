@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Alchemyguy\YoutubeLaravelApi\Tests\Unit\Services\LiveStream;
 
 use Alchemyguy\YoutubeLaravelApi\DTOs\BroadcastData;
+use Alchemyguy\YoutubeLaravelApi\Enums\BroadcastStatus;
 use Alchemyguy\YoutubeLaravelApi\Enums\PrivacyStatus;
+use Alchemyguy\YoutubeLaravelApi\Exceptions\ConfigurationException;
 use Alchemyguy\YoutubeLaravelApi\Services\LiveStream\BroadcastManager;
 use Alchemyguy\YoutubeLaravelApi\Tests\TestCase;
 use DateTimeImmutable;
@@ -51,16 +53,16 @@ final class BroadcastManagerTest extends TestCase
 
         $resp = (new BroadcastManager($broadcasts))->transition(
             'evt-1',
-            \Alchemyguy\YoutubeLaravelApi\Enums\BroadcastStatus::Live
+            BroadcastStatus::Live
         );
         $this->assertSame('live', $resp['lifeCycleStatus']);
     }
 
     public function test_transition_throws_on_empty_broadcast_id(): void
     {
-        $this->expectException(\Alchemyguy\YoutubeLaravelApi\Exceptions\ConfigurationException::class);
+        $this->expectException(ConfigurationException::class);
         (new BroadcastManager(Mockery::mock(LiveBroadcasts::class)))
-            ->transition('', \Alchemyguy\YoutubeLaravelApi\Enums\BroadcastStatus::Live);
+            ->transition('', BroadcastStatus::Live);
     }
 
     public function test_delete_calls_live_broadcasts_delete(): void

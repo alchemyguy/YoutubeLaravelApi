@@ -41,6 +41,7 @@ final readonly class BrandingProperties
                 $out[$dotted] = $this->{$prop};
             }
         }
+
         return $out;
     }
 }

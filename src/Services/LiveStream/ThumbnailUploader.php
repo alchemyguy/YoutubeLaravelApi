@@ -12,6 +12,7 @@ use Google\Service\YouTube\Resource\Thumbnails;
 class ThumbnailUploader
 {
     private const ALLOWED_MIME = ['image/jpeg', 'image/png'];
+
     private const CHUNK_SIZE_BYTES = 1048576;
 
     public function __construct(
@@ -21,11 +22,11 @@ class ThumbnailUploader
 
     public function upload(string $path, string $videoId): string
     {
-        if (!is_file($path)) {
+        if (! is_file($path)) {
             throw new ConfigurationException("Thumbnail file not found: {$path}");
         }
         $mime = (string) (mime_content_type($path) ?: 'application/octet-stream');
-        if (!in_array($mime, self::ALLOWED_MIME, true)) {
+        if (! in_array($mime, self::ALLOWED_MIME, true)) {
             throw new ConfigurationException(
                 "Unsupported thumbnail MIME type '{$mime}'. Allowed: " . implode(', ', self::ALLOWED_MIME)
             );
@@ -50,7 +51,7 @@ class ThumbnailUploader
             }
             try {
                 $status = false;
-                while (!$status && !feof($handle)) {
+                while (! $status && ! feof($handle)) {
                     $chunk = fread($handle, self::CHUNK_SIZE_BYTES);
                     if ($chunk === false) {
                         throw new ConfigurationException('Failed to read thumbnail chunk');

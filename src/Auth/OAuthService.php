@@ -24,6 +24,7 @@ class OAuthService
             $this->client->setState($channelId);
         }
         $this->client->setLoginHint($youtubeEmail);
+
         return $this->client->createAuthUrl();
     }
 
@@ -54,7 +55,7 @@ class OAuthService
     {
         $this->client->setAccessToken($token);
 
-        if (!$this->client->isAccessTokenExpired()) {
+        if (! $this->client->isAccessTokenExpired()) {
             return null;
         }
 
@@ -70,11 +71,12 @@ class OAuthService
         }
 
         $newToken = $this->client->getAccessToken();
-        if (!is_array($newToken)) {
+        if (! is_array($newToken)) {
             throw new AuthenticationException('Token refresh returned invalid token shape.');
         }
 
         Event::dispatch(new TokenRefreshed($token, $newToken));
+
         return $newToken;
     }
 }

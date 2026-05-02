@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Alchemyguy\YoutubeLaravelApi\Tests\Unit\Services;
 
+use Alchemyguy\YoutubeLaravelApi\Auth\OAuthService;
+use Alchemyguy\YoutubeLaravelApi\DTOs\BrandingProperties;
 use Alchemyguy\YoutubeLaravelApi\Services\ChannelService;
 use Alchemyguy\YoutubeLaravelApi\Tests\TestCase;
 use Google\Client;
 use Google\Service\YouTube;
+use Google\Service\YouTube\Channel;
 use Google\Service\YouTube\Resource\Channels;
+use Google\Service\YouTube\Resource\Subscriptions;
+use Google\Service\YouTube\Subscription;
 use Mockery;
 
 final class ChannelServiceTest extends TestCase
@@ -31,9 +36,14 @@ final class ChannelServiceTest extends TestCase
         $youtube->channels = $channelsResource;
 
         $client = Mockery::mock(Client::class);
-        $svc = new class(new \Alchemyguy\YoutubeLaravelApi\Auth\OAuthService($client)) extends ChannelService {
+        $svc = new class(new OAuthService($client)) extends ChannelService
+        {
             public ?YouTube $injected = null;
-            protected function youtube(): YouTube { return $this->injected; }
+
+            protected function youtube(): YouTube
+            {
+                return $this->injected;
+            }
         };
         $svc->injected = $youtube;
 
@@ -52,12 +62,17 @@ final class ChannelServiceTest extends TestCase
         $youtube = Mockery::mock(YouTube::class);
         $youtube->channels = $channelsResource;
 
-        $oauth = Mockery::mock(\Alchemyguy\YoutubeLaravelApi\Auth\OAuthService::class);
+        $oauth = Mockery::mock(OAuthService::class);
         $oauth->shouldReceive('setAccessToken')->once();
 
-        $svc = new class($oauth) extends ChannelService {
+        $svc = new class($oauth) extends ChannelService
+        {
             public ?YouTube $injected = null;
-            protected function youtube(): YouTube { return $this->injected; }
+
+            protected function youtube(): YouTube
+            {
+                return $this->injected;
+            }
         };
         $svc->injected = $youtube;
 
@@ -72,12 +87,17 @@ final class ChannelServiceTest extends TestCase
         $youtube = Mockery::mock(YouTube::class);
         $youtube->channels = $channelsResource;
 
-        $oauth = Mockery::mock(\Alchemyguy\YoutubeLaravelApi\Auth\OAuthService::class);
+        $oauth = Mockery::mock(OAuthService::class);
         $oauth->shouldReceive('setAccessToken');
 
-        $svc = new class($oauth) extends ChannelService {
+        $svc = new class($oauth) extends ChannelService
+        {
             public ?YouTube $injected = null;
-            protected function youtube(): YouTube { return $this->injected; }
+
+            protected function youtube(): YouTube
+            {
+                return $this->injected;
+            }
         };
         $svc->injected = $youtube;
 
@@ -99,14 +119,19 @@ final class ChannelServiceTest extends TestCase
             ],
         ];
 
-        $subs = Mockery::mock(\Google\Service\YouTube\Resource\Subscriptions::class);
+        $subs = Mockery::mock(Subscriptions::class);
         $subs->shouldReceive('listSubscriptions')->twice()->andReturn($page1, $page2);
         $youtube = Mockery::mock(YouTube::class);
         $youtube->subscriptions = $subs;
 
-        $svc = new class(new \Alchemyguy\YoutubeLaravelApi\Auth\OAuthService(Mockery::mock(Client::class))) extends ChannelService {
+        $svc = new class(new OAuthService(Mockery::mock(Client::class))) extends ChannelService
+        {
             public ?YouTube $injected = null;
-            protected function youtube(): YouTube { return $this->injected; }
+
+            protected function youtube(): YouTube
+            {
+                return $this->injected;
+            }
         };
         $svc->injected = $youtube;
 
@@ -117,20 +142,25 @@ final class ChannelServiceTest extends TestCase
 
     public function test_subscribe_inserts_subscription(): void
     {
-        $subs = Mockery::mock(\Google\Service\YouTube\Resource\Subscriptions::class);
+        $subs = Mockery::mock(Subscriptions::class);
         $subs->shouldReceive('insert')->once()->withArgs(function (string $part, $resource) {
-            return $part === 'snippet' && $resource instanceof \Google\Service\YouTube\Subscription;
+            return $part === 'snippet' && $resource instanceof Subscription;
         })->andReturn((object) ['id' => 'sub-1']);
 
         $youtube = Mockery::mock(YouTube::class);
         $youtube->subscriptions = $subs;
 
-        $oauth = Mockery::mock(\Alchemyguy\YoutubeLaravelApi\Auth\OAuthService::class);
+        $oauth = Mockery::mock(OAuthService::class);
         $oauth->shouldReceive('setAccessToken')->once();
 
-        $svc = new class($oauth) extends ChannelService {
+        $svc = new class($oauth) extends ChannelService
+        {
             public ?YouTube $injected = null;
-            protected function youtube(): YouTube { return $this->injected; }
+
+            protected function youtube(): YouTube
+            {
+                return $this->injected;
+            }
         };
         $svc->injected = $youtube;
 
@@ -140,18 +170,23 @@ final class ChannelServiceTest extends TestCase
 
     public function test_unsubscribe_deletes_subscription(): void
     {
-        $subs = Mockery::mock(\Google\Service\YouTube\Resource\Subscriptions::class);
+        $subs = Mockery::mock(Subscriptions::class);
         $subs->shouldReceive('delete')->once()->with('sub-id-1')->andReturn(null);
 
         $youtube = Mockery::mock(YouTube::class);
         $youtube->subscriptions = $subs;
 
-        $oauth = Mockery::mock(\Alchemyguy\YoutubeLaravelApi\Auth\OAuthService::class);
+        $oauth = Mockery::mock(OAuthService::class);
         $oauth->shouldReceive('setAccessToken')->once();
 
-        $svc = new class($oauth) extends ChannelService {
+        $svc = new class($oauth) extends ChannelService
+        {
             public ?YouTube $injected = null;
-            protected function youtube(): YouTube { return $this->injected; }
+
+            protected function youtube(): YouTube
+            {
+                return $this->injected;
+            }
         };
         $svc->injected = $youtube;
 
@@ -160,25 +195,30 @@ final class ChannelServiceTest extends TestCase
 
     public function test_update_branding_calls_channels_update_with_resource(): void
     {
-        $channels = Mockery::mock(\Google\Service\YouTube\Resource\Channels::class);
+        $channels = Mockery::mock(Channels::class);
         $channels->shouldReceive('update')->once()->withArgs(function ($part, $resource, $params) {
             return $part === 'brandingSettings'
-                && $resource instanceof \Google\Service\YouTube\Channel;
+                && $resource instanceof Channel;
         })->andReturn((object) ['id' => 'UC1']);
 
         $youtube = Mockery::mock(YouTube::class);
         $youtube->channels = $channels;
 
-        $oauth = Mockery::mock(\Alchemyguy\YoutubeLaravelApi\Auth\OAuthService::class);
+        $oauth = Mockery::mock(OAuthService::class);
         $oauth->shouldReceive('setAccessToken')->once();
 
-        $svc = new class($oauth) extends ChannelService {
+        $svc = new class($oauth) extends ChannelService
+        {
             public ?YouTube $injected = null;
-            protected function youtube(): YouTube { return $this->injected; }
+
+            protected function youtube(): YouTube
+            {
+                return $this->injected;
+            }
         };
         $svc->injected = $youtube;
 
-        $props = new \Alchemyguy\YoutubeLaravelApi\DTOs\BrandingProperties(
+        $props = new BrandingProperties(
             channelId: 'UC1',
             description: 'new desc',
             keywords: 'a,b',

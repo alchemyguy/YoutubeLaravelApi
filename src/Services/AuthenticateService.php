@@ -47,6 +47,7 @@ class AuthenticateService extends BaseService
         $resp = $this->call(fn () => $this->youtube->channels->listChannels('snippet', ['mine' => true]));
         $decoded = is_array($resp) ? $resp : (array) json_decode(json_encode($resp, JSON_THROW_ON_ERROR), true, flags: JSON_THROW_ON_ERROR);
         $first = $decoded['items'][0] ?? null;
+
         return $first === null ? null : (array) $first;
     }
 
@@ -61,6 +62,7 @@ class AuthenticateService extends BaseService
                 'mine' => true,
                 'maxResults' => 1,
             ]);
+
             return true;
         } catch (GoogleServiceException $e) {
             $reasons = array_column($e->getErrors() ?? [], 'reason');

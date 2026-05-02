@@ -41,7 +41,7 @@ final readonly class BroadcastData
                 "Total tag length ({$totalTagLen}) exceeds YouTube's 500-character limit."
             );
         }
-        if ($thumbnailPath !== null && !is_file($thumbnailPath)) {
+        if ($thumbnailPath !== null && ! is_file($thumbnailPath)) {
             throw new InvalidArgumentException("Thumbnail not found: {$thumbnailPath}");
         }
     }
@@ -54,7 +54,7 @@ final readonly class BroadcastData
     public static function fromArray(array $data): self
     {
         foreach (['title', 'description', 'event_start_date_time', 'time_zone'] as $required) {
-            if (!isset($data[$required]) || $data[$required] === '') {
+            if (! isset($data[$required]) || $data[$required] === '') {
                 throw new InvalidArgumentException("Missing required field: {$required}");
             }
         }
@@ -72,7 +72,7 @@ final readonly class BroadcastData
         }
 
         $end = null;
-        if (!empty($data['event_end_date_time'])) {
+        if (! empty($data['event_end_date_time'])) {
             $end = DateTimeImmutable::createFromFormat(
                 'Y-m-d H:i:s',
                 (string) $data['event_end_date_time'],

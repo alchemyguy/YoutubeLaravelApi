@@ -10,13 +10,18 @@ use Alchemyguy\YoutubeLaravelApi\Enums\BroadcastStatus;
 use Alchemyguy\YoutubeLaravelApi\Exceptions\YoutubeApiException;
 use Alchemyguy\YoutubeLaravelApi\Services\BaseService;
 use Google\Service\YouTube;
+use Google\Service\YouTube\Video;
 
 class LiveStreamService extends BaseService
 {
     private BroadcastManager $broadcasts;
+
     private StreamManager $streams;
+
     private ThumbnailUploader $thumbnails;
+
     private YouTube $youtube;
+
     /** @var array<string, string> */
     private array $languages;
 
@@ -84,6 +89,7 @@ class LiveStreamService extends BaseService
     public function updateBroadcast(array $token, string $broadcastId, BroadcastData $data): array
     {
         $this->authorize($token);
+
         return $this->call(function () use ($broadcastId, $data): array {
             $broadcast = $this->broadcasts->update($broadcastId, $data);
 
@@ -111,6 +117,7 @@ class LiveStreamService extends BaseService
     public function transition(array $token, string $broadcastId, BroadcastStatus $status): array
     {
         $this->authorize($token);
+
         return $this->call(fn () => $this->broadcasts->transition($broadcastId, $status));
     }
 
@@ -135,7 +142,7 @@ class LiveStreamService extends BaseService
         $videoSnippet['title'] = $data->title;
         $videoSnippet['description'] = $data->description;
 
-        $this->youtube->videos->update('snippet', new \Google\Service\YouTube\Video([
+        $this->youtube->videos->update('snippet', new Video([
             'id' => $videoId,
             'snippet' => $videoSnippet,
         ]));
@@ -154,7 +161,7 @@ class LiveStreamService extends BaseService
                 ? $resp
                 : (array) json_decode(json_encode($resp, JSON_THROW_ON_ERROR), true, flags: JSON_THROW_ON_ERROR);
             $items = $decoded['items'] ?? [];
-            if (!empty($items)) {
+            if (! empty($items)) {
                 return (array) ($items[0]['snippet'] ?? []);
             }
             $attempts++;
