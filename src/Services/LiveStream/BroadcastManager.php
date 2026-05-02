@@ -12,7 +12,7 @@ use Google\Service\YouTube\LiveBroadcastSnippet;
 use Google\Service\YouTube\LiveBroadcastStatus;
 use Google\Service\YouTube\Resource\LiveBroadcasts;
 
-final class BroadcastManager
+class BroadcastManager
 {
     public function __construct(private readonly LiveBroadcasts $broadcasts) {}
 

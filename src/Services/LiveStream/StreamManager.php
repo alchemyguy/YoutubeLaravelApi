@@ -10,7 +10,7 @@ use Google\Service\YouTube\LiveStreamSnippet;
 use Google\Service\YouTube\Resource\LiveBroadcasts;
 use Google\Service\YouTube\Resource\LiveStreams;
 
-final class StreamManager
+class StreamManager
 {
     public function __construct(
         private readonly LiveStreams $streams,

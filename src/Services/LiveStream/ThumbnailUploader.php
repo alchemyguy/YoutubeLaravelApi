@@ -9,7 +9,7 @@ use Google\Client;
 use Google\Http\MediaFileUpload;
 use Google\Service\YouTube\Resource\Thumbnails;
 
-final class ThumbnailUploader
+class ThumbnailUploader
 {
     private const ALLOWED_MIME = ['image/jpeg', 'image/png'];
     private const CHUNK_SIZE_BYTES = 1048576;
