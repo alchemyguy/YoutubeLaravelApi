@@ -45,3 +45,12 @@ it('wraps non-quota Google errors as YoutubeApiException', function (): void {
     expect($wrapped)->toBeInstanceOf(YoutubeApiException::class)
         ->and($wrapped)->not->toBeInstanceOf(QuotaExceededException::class);
 });
+
+it('maps liveStreamingNotEnabled to LiveStreamingNotEnabledException', function (): void {
+    $googleErr = new Exception('not enabled', 403, null, [
+        ['reason' => 'liveStreamingNotEnabled'],
+    ]);
+    $wrapped = YoutubeApiException::fromGoogleException($googleErr);
+    expect($wrapped)->toBeInstanceOf(LiveStreamingNotEnabledException::class)
+        ->and($wrapped->getPrevious())->toBe($googleErr);
+});

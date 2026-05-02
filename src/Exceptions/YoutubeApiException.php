@@ -19,13 +19,17 @@ class YoutubeApiException extends YoutubeException
         parent::__construct($message, $code, $previous);
     }
 
-    public static function fromGoogleException(GoogleServiceException $e): self
+    public static function fromGoogleException(GoogleServiceException $e): YoutubeException
     {
         $errors = $e->getErrors() ?? [];
         $reasons = array_column($errors, 'reason');
 
         if (in_array('quotaExceeded', $reasons, true) || in_array('rateLimitExceeded', $reasons, true)) {
             return new QuotaExceededException($e->getMessage(), $e->getCode(), $e, $errors);
+        }
+
+        if (in_array('liveStreamingNotEnabled', $reasons, true)) {
+            return new LiveStreamingNotEnabledException($e->getMessage(), $e->getCode(), $e);
         }
 
         return new self($e->getMessage(), $e->getCode(), $e, $errors);
