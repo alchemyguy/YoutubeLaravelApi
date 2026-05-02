@@ -24,4 +24,22 @@ class ChannelService extends BaseService
         $params = array_filter($params, static fn ($v) => $v !== null && $v !== '');
         return $this->call(fn () => (array) $this->youtube()->channels->listChannels($part, $params));
     }
+
+    /**
+     * @param array<string, mixed> $token
+     * @return array<string, mixed>|null
+     */
+    public function getOwnChannel(array $token): ?array
+    {
+        $this->authorize($token);
+
+        return $this->call(function (): ?array {
+            $response = $this->youtube()->channels->listChannels(
+                'snippet,contentDetails,statistics,brandingSettings',
+                ['mine' => true]
+            );
+            $decoded = json_decode(json_encode($response, JSON_THROW_ON_ERROR), true, flags: JSON_THROW_ON_ERROR);
+            return $decoded['items'][0] ?? null;
+        });
+    }
 }
