@@ -77,4 +77,37 @@ class ChannelService extends BaseService
             return $collected;
         });
     }
+
+    /**
+     * Subscribe the authorized channel to the target channel.
+     *
+     * NOTE: YouTube heavily rate-limits subscription writes (anti-bot). Expect
+     * frequent rejections for non-interactive automation.
+     *
+     * @param array<string, mixed> $token
+     * @return array<string, mixed>
+     */
+    public function subscribe(array $token, string $targetChannelId): array
+    {
+        $this->authorize($token);
+        return $this->call(function () use ($targetChannelId): array {
+            $resource = new \Google\Service\YouTube\Subscription([
+                'snippet' => [
+                    'resourceId' => [
+                        'kind' => 'youtube#channel',
+                        'channelId' => $targetChannelId,
+                    ],
+                ],
+            ]);
+            $resp = $this->youtube()->subscriptions->insert('snippet', $resource);
+            return (array) json_decode(json_encode($resp, JSON_THROW_ON_ERROR), true, flags: JSON_THROW_ON_ERROR);
+        });
+    }
+
+    /** @param array<string, mixed> $token */
+    public function unsubscribe(array $token, string $subscriptionId): void
+    {
+        $this->authorize($token);
+        $this->call(fn () => $this->youtube()->subscriptions->delete($subscriptionId));
+    }
 }

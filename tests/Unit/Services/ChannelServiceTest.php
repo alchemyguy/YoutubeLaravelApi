@@ -114,4 +114,47 @@ final class ChannelServiceTest extends TestCase
         $this->assertCount(3, $result);
         $this->assertSame(['A', 'B', 'C'], array_column($result, 'channelId'));
     }
+
+    public function test_subscribe_inserts_subscription(): void
+    {
+        $subs = Mockery::mock(\Google\Service\YouTube\Resource\Subscriptions::class);
+        $subs->shouldReceive('insert')->once()->withArgs(function (string $part, $resource) {
+            return $part === 'snippet' && $resource instanceof \Google\Service\YouTube\Subscription;
+        })->andReturn((object) ['id' => 'sub-1']);
+
+        $youtube = Mockery::mock(YouTube::class);
+        $youtube->subscriptions = $subs;
+
+        $oauth = Mockery::mock(\Alchemyguy\YoutubeLaravelApi\Auth\OAuthService::class);
+        $oauth->shouldReceive('setAccessToken')->once();
+
+        $svc = new class($oauth) extends ChannelService {
+            public ?YouTube $injected = null;
+            protected function youtube(): YouTube { return $this->injected; }
+        };
+        $svc->injected = $youtube;
+
+        $resp = $svc->subscribe(['access_token' => 'tok'], 'UC-target');
+        $this->assertSame('sub-1', $resp['id']);
+    }
+
+    public function test_unsubscribe_deletes_subscription(): void
+    {
+        $subs = Mockery::mock(\Google\Service\YouTube\Resource\Subscriptions::class);
+        $subs->shouldReceive('delete')->once()->with('sub-id-1')->andReturn(null);
+
+        $youtube = Mockery::mock(YouTube::class);
+        $youtube->subscriptions = $subs;
+
+        $oauth = Mockery::mock(\Alchemyguy\YoutubeLaravelApi\Auth\OAuthService::class);
+        $oauth->shouldReceive('setAccessToken')->once();
+
+        $svc = new class($oauth) extends ChannelService {
+            public ?YouTube $injected = null;
+            protected function youtube(): YouTube { return $this->injected; }
+        };
+        $svc->injected = $youtube;
+
+        $svc->unsubscribe(['access_token' => 'tok'], 'sub-id-1');
+    }
 }
