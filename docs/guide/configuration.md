@@ -30,16 +30,22 @@ return [
 
 ## Customizing the Google client
 
-If you need to override anything about the underlying `Google\Client` (custom HTTP handler, additional scopes, ...), bind a replacement factory in your `AppServiceProvider`:
+If you need to override anything about the underlying `Google\Client` (custom HTTP handler, additional scopes, ...), rebind the factory in your `AppServiceProvider` with a wrapper that customizes the client after `make()`:
 
 ```php
 use Alchemyguy\YoutubeLaravelApi\Support\YoutubeClientFactory;
 use Google\Client;
 
-$this->app->extend(YoutubeClientFactory::class, function (YoutubeClientFactory $factory) {
-    return new class([]) extends YoutubeClientFactory {
+// In your AppServiceProvider::register()
+$this->app->bind(YoutubeClientFactory::class, function () {
+    $factory = new YoutubeClientFactory(config('youtube'));
+
+    // Wrap the factory's output if you need to customize the Google\Client
+    return new class($factory) {
+        public function __construct(private readonly YoutubeClientFactory $inner) {}
+
         public function make(): Client {
-            $client = parent::make();
+            $client = $this->inner->make();
             $client->setHttpClient(/* your custom Guzzle client */);
             return $client;
         }
