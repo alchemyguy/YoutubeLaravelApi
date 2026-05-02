@@ -1,7 +1,7 @@
 {
     "name": "alchemyguy/youtube-laravel-api",
-    "description": "It is a wrapper over Youtube Api v3 which simplifies functionalities the laravel way.",
-    "keywords": ["alchemyguy", "YoutubeLaravelApi", "Youtube LiveStream", "php", "Youtube Backup", "Youtube Video", "Youtube Api V3", "laravel", "Oauth", "google api", "Youtube Channel"],
+    "description": "Modern Laravel wrapper for the YouTube Data API v3 with OAuth, live streaming, channels, and video uploads.",
+    "keywords": ["alchemyguy", "youtube", "laravel", "youtube-api", "live-streaming", "youtube-livestream", "youtube-video", "google-api", "oauth"],
     "homepage": "https://github.com/alchemyguy/YoutubeLaravelApi",
     "license": "MIT",
     "authors": [
@@ -12,38 +12,58 @@
         }
     ],
     "require": {
-        "google/apiclient": "^2.0"
+        "php": "^8.3",
+        "google/apiclient": "^2.18",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/contracts": "^11.0|^12.0",
+        "nesbot/carbon": "^2.72|^3.0"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^2.3"
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "orchestra/testbench": "^9.0|^10.0",
+        "mockery/mockery": "^1.6",
+        "phpstan/phpstan": "^1.11",
+        "larastan/larastan": "^2.9",
+        "laravel/pint": "^1.16",
+        "rector/rector": "^1.2"
     },
     "autoload": {
         "psr-4": {
-            "alchemyguy\\YoutubeLaravelApi\\": "src"
+            "Alchemyguy\\YoutubeLaravelApi\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "alchemyguy\\YoutubeLaravelApi\\": "tests"
+            "Alchemyguy\\YoutubeLaravelApi\\Tests\\": "tests/"
         }
     },
     "scripts": {
-        "check-style":
-            "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests",
-        "fix-style":
-            "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests"
+        "test": "pest",
+        "test:unit": "pest --testsuite=Unit",
+        "test:integration": "pest --group=integration",
+        "test:coverage": "pest --coverage --min=95",
+        "analyse": "phpstan analyse",
+        "fix": "pint",
+        "lint": "pint --test",
+        "rector": "rector process --dry-run"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "2.0-dev"
         },
         "laravel": {
             "providers": [
-                "alchemyguy\\YoutubeLaravelApi\\YoutubeLaravelApiServiceProvider"
+                "Alchemyguy\\YoutubeLaravelApi\\YoutubeLaravelApiServiceProvider"
             ]
         }
     },
     "config": {
-        "sort-packages": true
-    }
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }
