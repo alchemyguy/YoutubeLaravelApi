@@ -42,4 +42,39 @@ class ChannelService extends BaseService
             return $decoded['items'][0] ?? null;
         });
     }
+
+    /**
+     * @param array<string, mixed> $params Required: 'channelId', 'totalResults'
+     * @return array<int, array<string, mixed>>
+     */
+    public function subscriptions(array $params, string $part = 'snippet'): array
+    {
+        $channelId = (string) ($params['channelId'] ?? '');
+        $totalResults = max(0, (int) ($params['totalResults'] ?? 0));
+        $perPage = 50;
+
+        return $this->call(function () use ($channelId, $totalResults, $perPage, $part): array {
+            $youtube = $this->youtube();
+            $collected = [];
+            $pageToken = null;
+
+            do {
+                $req = ['channelId' => $channelId, 'maxResults' => $perPage];
+                if ($pageToken !== null) {
+                    $req['pageToken'] = $pageToken;
+                }
+                $resp = $youtube->subscriptions->listSubscriptions($part, $req);
+                $decoded = json_decode(json_encode($resp, JSON_THROW_ON_ERROR), true, flags: JSON_THROW_ON_ERROR);
+                foreach ($decoded['items'] ?? [] as $item) {
+                    $collected[] = $item['snippet']['resourceId'] ?? [];
+                    if (count($collected) >= $totalResults) {
+                        return $collected;
+                    }
+                }
+                $pageToken = $decoded['nextPageToken'] ?? null;
+            } while ($pageToken !== null && count($collected) < $totalResults);
+
+            return $collected;
+        });
+    }
 }

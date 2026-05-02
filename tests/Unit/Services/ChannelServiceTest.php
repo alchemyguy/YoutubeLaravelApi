@@ -83,4 +83,35 @@ final class ChannelServiceTest extends TestCase
 
         $this->assertNull($svc->getOwnChannel(['access_token' => 'tok']));
     }
+
+    public function test_subscriptions_paginates_until_total_results(): void
+    {
+        $page1 = (object) [
+            'items' => [
+                (object) ['snippet' => (object) ['resourceId' => (object) ['channelId' => 'A']]],
+                (object) ['snippet' => (object) ['resourceId' => (object) ['channelId' => 'B']]],
+            ],
+            'nextPageToken' => 'tok2',
+        ];
+        $page2 = (object) [
+            'items' => [
+                (object) ['snippet' => (object) ['resourceId' => (object) ['channelId' => 'C']]],
+            ],
+        ];
+
+        $subs = Mockery::mock(\Google\Service\YouTube\Resource\Subscriptions::class);
+        $subs->shouldReceive('listSubscriptions')->twice()->andReturn($page1, $page2);
+        $youtube = Mockery::mock(YouTube::class);
+        $youtube->subscriptions = $subs;
+
+        $svc = new class(new \Alchemyguy\YoutubeLaravelApi\Auth\OAuthService(Mockery::mock(Client::class))) extends ChannelService {
+            public ?YouTube $injected = null;
+            protected function youtube(): YouTube { return $this->injected; }
+        };
+        $svc->injected = $youtube;
+
+        $result = $svc->subscriptions(['channelId' => 'UC1', 'totalResults' => 3]);
+        $this->assertCount(3, $result);
+        $this->assertSame(['A', 'B', 'C'], array_column($result, 'channelId'));
+    }
 }
