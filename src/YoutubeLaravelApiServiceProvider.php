@@ -1,25 +1,33 @@
 <?php
 
-namespace alchemyguy\YoutubeLaravelApi;
+declare(strict_types=1);
 
+namespace Alchemyguy\YoutubeLaravelApi;
+
+use Alchemyguy\YoutubeLaravelApi\Support\YoutubeClientFactory;
+use Illuminate\Contracts\Config\Repository;
 use Illuminate\Support\ServiceProvider;
 
-class YoutubeLaravelApiServiceProvider extends ServiceProvider {
-	/**
-	 * Perform post-registration booting of services.
-	 *
-	 * @return void
-	 */
-	public function boot() {
-		$this->publishes(array(__DIR__ . '/config/google-config.php' => config_path('google-config.php')), 'youtube-config');
-	}
+class YoutubeLaravelApiServiceProvider extends ServiceProvider
+{
+    #[\Override]
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__ . '/config/youtube.php', 'youtube');
 
-	/**
-	 * Register any package services.
-	 *
-	 * @return void
-	 */
-	public function register() {
-		//
-	}
+        $this->app->singleton(YoutubeClientFactory::class, function ($app): YoutubeClientFactory {
+            /** @var Repository $config */
+            $config = $app->make('config');
+
+            return new YoutubeClientFactory($config->get('youtube', []));
+        });
+    }
+
+    public function boot(): void
+    {
+        $this->publishes(
+            [__DIR__ . '/config/youtube.php' => config_path('youtube.php')],
+            'youtube-config'
+        );
+    }
 }

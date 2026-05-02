@@ -1,0 +1,43 @@
+name: Bug report
+description: Report a bug or unexpected behavior
+labels: ["bug", "needs-triage"]
+body:
+  - type: input
+    id: package-version
+    attributes:
+      label: Package version
+      description: e.g. 2.0.0
+    validations:
+      required: true
+  - type: input
+    id: php-version
+    attributes:
+      label: PHP version
+    validations:
+      required: true
+  - type: input
+    id: laravel-version
+    attributes:
+      label: Laravel version
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened? What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Minimal code that reproduces the issue.
+      render: php
+    validations:
+      required: true
+  - type: textarea
+    id: stack-trace
+    attributes:
+      label: Stack trace (if any)
+      render: text

@@ -1,0 +1,13 @@
+includes:
+    - ./vendor/larastan/larastan/extension.neon
+    - ./vendor/phpstan/phpstan-mockery/extension.neon
+
+parameters:
+    level: 8
+    paths:
+        - src
+        - tests
+    excludePaths:
+        - src/config/*
+    tmpDir: .phpstan.cache
+    treatPhpDocTypesAsCertain: false
