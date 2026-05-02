@@ -8,6 +8,7 @@ use Alchemyguy\YoutubeLaravelApi\Exceptions\ConfigurationException;
 use Google\Client;
 use Google\Http\MediaFileUpload;
 use Google\Service\YouTube\Resource\Thumbnails;
+use Psr\Http\Message\RequestInterface;
 
 class ThumbnailUploader
 {
@@ -34,12 +35,15 @@ class ThumbnailUploader
 
         $this->client->setDefer(true);
         try {
+            // In deferred mode the Google client returns a PSR-7 RequestInterface
+            // rather than the declared ThumbnailSetResponse.
+            /** @var RequestInterface $request */
             $request = $this->thumbnails->set($videoId);
             $media = new MediaFileUpload(
                 $this->client,
                 $request,
                 $mime,
-                null,
+                '',
                 true,
                 self::CHUNK_SIZE_BYTES
             );

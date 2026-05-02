@@ -93,7 +93,7 @@ final readonly class BroadcastData
             privacyStatus: PrivacyStatus::from((string) ($data['privacy_status'] ?? 'public')),
             languageName: (string) ($data['language_name'] ?? 'English'),
             thumbnailPath: isset($data['thumbnail_path']) ? (string) $data['thumbnail_path'] : null,
-            tags: array_values(array_filter((array) ($data['tag_array'] ?? []), 'strlen')),
+            tags: array_values(array_filter((array) ($data['tag_array'] ?? []), static fn ($v): bool => is_string($v) && $v !== '')),
         );
     }
 }

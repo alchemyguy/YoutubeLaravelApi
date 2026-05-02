@@ -19,13 +19,14 @@
         "nesbot/carbon": "^2.72|^3.0"
     },
     "require-dev": {
-        "pestphp/pest": "^3.0",
-        "pestphp/pest-plugin-laravel": "^3.0",
-        "orchestra/testbench": "^9.0|^10.0",
-        "mockery/mockery": "^1.6",
-        "phpstan/phpstan": "^1.11",
         "larastan/larastan": "^2.9",
         "laravel/pint": "^1.16",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^9.0|^10.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "phpstan/phpstan": "^1.11",
+        "phpstan/phpstan-mockery": "^1.1",
         "rector/rector": "^1.2"
     },
     "autoload": {

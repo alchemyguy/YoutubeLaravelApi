@@ -17,7 +17,10 @@ class StreamManager
         private readonly LiveBroadcasts $broadcasts,
     ) {}
 
-    /** @return array<string, mixed> */
+    /**
+     * @param 'dash'|'hls'|'rtmp'|'webrtc' $ingestionType
+     * @return array<string, mixed>
+     */
     public function insert(string $title, string $format = '720p', string $ingestionType = 'rtmp'): array
     {
         $snippet = new LiveStreamSnippet;

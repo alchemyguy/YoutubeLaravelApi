@@ -47,6 +47,7 @@ final class AuthenticateServiceTest extends TestCase
         $r = $svc->authenticateWithCode('code123');
 
         $this->assertSame('tok', $r['token']['access_token']);
+        $this->assertNotNull($r['channel']);
         $this->assertSame('UC-mine', $r['channel']['id']);
         $this->assertTrue($r['liveStreamingEnabled']);
     }

@@ -42,7 +42,7 @@ final class VideoServiceTest extends TestCase
 
             protected function youtube(): YouTube
             {
-                return $this->injected;
+                return $this->injected ?? throw new \LogicException('youtube not injected');
             }
         };
         $svc->injected = $youtube;
@@ -67,7 +67,7 @@ final class VideoServiceTest extends TestCase
 
             protected function youtube(): YouTube
             {
-                return $this->injected;
+                return $this->injected ?? throw new \LogicException('youtube not injected');
             }
         };
         $svc->injected = $youtube;
@@ -91,7 +91,7 @@ final class VideoServiceTest extends TestCase
 
             protected function youtube(): YouTube
             {
-                return $this->injected;
+                return $this->injected ?? throw new \LogicException('youtube not injected');
             }
         };
         $svc->injected = $youtube;
@@ -116,7 +116,7 @@ final class VideoServiceTest extends TestCase
 
             protected function youtube(): YouTube
             {
-                return $this->injected;
+                return $this->injected ?? throw new \LogicException('youtube not injected');
             }
         };
         $svc->injected = $youtube;
@@ -143,7 +143,7 @@ final class VideoServiceTest extends TestCase
 
             protected function youtube(): YouTube
             {
-                return $this->injected;
+                return $this->injected ?? throw new \LogicException('youtube not injected');
             }
         };
         $svc->injected = $youtube;

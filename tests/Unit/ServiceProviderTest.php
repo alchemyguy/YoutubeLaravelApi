@@ -13,14 +13,18 @@ final class ServiceProviderTest extends TestCase
 {
     public function test_factory_resolves_as_singleton(): void
     {
-        $a = $this->app->make(YoutubeClientFactory::class);
-        $b = $this->app->make(YoutubeClientFactory::class);
+        $app = $this->app;
+        $this->assertNotNull($app);
+        $a = $app->make(YoutubeClientFactory::class);
+        $b = $app->make(YoutubeClientFactory::class);
         $this->assertSame($a, $b);
     }
 
     public function test_factory_uses_youtube_config(): void
     {
-        $factory = $this->app->make(YoutubeClientFactory::class);
+        $app = $this->app;
+        $this->assertNotNull($app);
+        $factory = $app->make(YoutubeClientFactory::class);
         $client = $factory->make();
         $this->assertSame('test-client-id', $client->getClientId());
     }

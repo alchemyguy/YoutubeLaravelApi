@@ -12,6 +12,7 @@ use Google\Service\YouTube;
 use Google\Service\YouTube\Video;
 use Google\Service\YouTube\VideoSnippet;
 use Google\Service\YouTube\VideoStatus;
+use Psr\Http\Message\RequestInterface;
 
 class VideoService extends BaseService
 {
@@ -88,11 +89,12 @@ class VideoService extends BaseService
         try {
             return $this->call(function () use ($client, $videoPath, $data, $video): array {
                 $insertRequest = $this->youtube()->videos->insert('status,snippet', $video);
+                /** @var RequestInterface $insertRequest */
                 $media = new MediaFileUpload(
                     $client,
                     $insertRequest,
                     'video/*',
-                    null,
+                    '',
                     true,
                     $data->chunkSizeBytes
                 );
@@ -104,8 +106,10 @@ class VideoService extends BaseService
                 }
                 try {
                     $status = false;
+                    $chunkSize = $data->chunkSizeBytes;
+                    assert($chunkSize >= 1);
                     while (! $status && ! feof($handle)) {
-                        $chunk = fread($handle, $data->chunkSizeBytes);
+                        $chunk = fread($handle, $chunkSize);
                         if ($chunk === false) {
                             throw new ConfigurationException('Failed to read video chunk');
                         }

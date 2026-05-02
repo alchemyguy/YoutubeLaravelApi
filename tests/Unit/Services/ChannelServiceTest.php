@@ -42,7 +42,7 @@ final class ChannelServiceTest extends TestCase
 
             protected function youtube(): YouTube
             {
-                return $this->injected;
+                return $this->injected ?? throw new \LogicException('youtube not injected');
             }
         };
         $svc->injected = $youtube;
@@ -71,12 +71,13 @@ final class ChannelServiceTest extends TestCase
 
             protected function youtube(): YouTube
             {
-                return $this->injected;
+                return $this->injected ?? throw new \LogicException('youtube not injected');
             }
         };
         $svc->injected = $youtube;
 
         $result = $svc->getOwnChannel(['access_token' => 'tok']);
+        $this->assertNotNull($result);
         $this->assertSame('UC-mine', $result['id']);
     }
 
@@ -96,7 +97,7 @@ final class ChannelServiceTest extends TestCase
 
             protected function youtube(): YouTube
             {
-                return $this->injected;
+                return $this->injected ?? throw new \LogicException('youtube not injected');
             }
         };
         $svc->injected = $youtube;
@@ -130,7 +131,7 @@ final class ChannelServiceTest extends TestCase
 
             protected function youtube(): YouTube
             {
-                return $this->injected;
+                return $this->injected ?? throw new \LogicException('youtube not injected');
             }
         };
         $svc->injected = $youtube;
@@ -159,7 +160,7 @@ final class ChannelServiceTest extends TestCase
 
             protected function youtube(): YouTube
             {
-                return $this->injected;
+                return $this->injected ?? throw new \LogicException('youtube not injected');
             }
         };
         $svc->injected = $youtube;
@@ -185,7 +186,7 @@ final class ChannelServiceTest extends TestCase
 
             protected function youtube(): YouTube
             {
-                return $this->injected;
+                return $this->injected ?? throw new \LogicException('youtube not injected');
             }
         };
         $svc->injected = $youtube;
@@ -213,7 +214,7 @@ final class ChannelServiceTest extends TestCase
 
             protected function youtube(): YouTube
             {
-                return $this->injected;
+                return $this->injected ?? throw new \LogicException('youtube not injected');
             }
         };
         $svc->injected = $youtube;

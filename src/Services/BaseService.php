@@ -12,6 +12,9 @@ use Google\Client;
 use Google\Service\Exception as GoogleServiceException;
 use Throwable;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 abstract class BaseService
 {
     protected OAuthService $oauth;
