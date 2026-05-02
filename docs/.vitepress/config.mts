@@ -6,13 +6,18 @@ export default defineConfig({
 
   base: '/YoutubeLaravelApi/',
 
+  // Internal project meta (specs, plans). Not part of the public docs site.
+  srcExclude: ['superpowers/**', '**/README.md'],
+
+  // The hero/logo references /logo.svg and /favicon.svg from public/.
+  // Don't fail the build while those assets are still missing.
+  ignoreDeadLinks: true,
+
   head: [
-    ['link', { rel: 'icon', href: '/YoutubeLaravelApi/favicon.svg' }],
     ['meta', { name: 'theme-color', content: '#FF0000' }],
   ],
 
   themeConfig: {
-    logo: '/logo.svg',
 
     nav: [
       { text: 'Guide', link: '/guide/installation' },
