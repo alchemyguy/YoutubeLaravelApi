@@ -13,6 +13,7 @@ use Mockery;
 
 final class StreamManagerTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         Mockery::close();
@@ -22,9 +23,7 @@ final class StreamManagerTest extends TestCase
     public function test_insert_creates_stream_with_rtmp_720p(): void
     {
         $streams = Mockery::mock(LiveStreams::class);
-        $streams->shouldReceive('insert')->once()->withArgs(function ($part, $resource, $params) {
-            return $part === 'snippet,cdn' && $resource instanceof LiveStream;
-        })->andReturn((object) ['id' => 'stream-1']);
+        $streams->shouldReceive('insert')->once()->withArgs(fn ($part, $resource, $params): bool => $part === 'snippet,cdn' && $resource instanceof LiveStream)->andReturn((object) ['id' => 'stream-1']);
 
         $broadcasts = Mockery::mock(LiveBroadcasts::class);
 

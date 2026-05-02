@@ -10,6 +10,7 @@ use Illuminate\Support\ServiceProvider;
 
 class YoutubeLaravelApiServiceProvider extends ServiceProvider
 {
+    #[\Override]
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/config/youtube.php', 'youtube');

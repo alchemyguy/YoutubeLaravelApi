@@ -65,7 +65,7 @@ class BroadcastManager
         $snippet->setTitle($data->title);
         $snippet->setDescription($data->description);
         $snippet->setScheduledStartTime($data->scheduledStartTime->format(DATE_ATOM));
-        if ($data->scheduledEndTime !== null) {
+        if ($data->scheduledEndTime instanceof \DateTimeImmutable) {
             $snippet->setScheduledEndTime($data->scheduledEndTime->format(DATE_ATOM));
         }
 
@@ -81,10 +81,9 @@ class BroadcastManager
     }
 
     /**
-     * @param mixed $resp
      * @return array<string, mixed>
      */
-    private function decode($resp): array
+    private function decode(mixed $resp): array
     {
         if (is_array($resp)) {
             return $resp;

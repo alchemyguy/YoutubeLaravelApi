@@ -7,10 +7,10 @@ namespace Alchemyguy\YoutubeLaravelApi\Support;
 use Alchemyguy\YoutubeLaravelApi\Exceptions\ConfigurationException;
 use Google\Client;
 
-final class YoutubeClientFactory
+final readonly class YoutubeClientFactory
 {
     /** @param array<string, mixed> $config */
-    public function __construct(private readonly array $config) {}
+    public function __construct(private array $config) {}
 
     public function make(): Client
     {

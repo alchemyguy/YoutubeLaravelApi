@@ -25,9 +25,9 @@ class ChannelService extends BaseService
      */
     public function listById(array $params, string $part = 'id,snippet'): array
     {
-        $params = array_filter($params, static fn ($v) => $v !== null && $v !== '');
+        $params = array_filter($params, static fn ($v): bool => $v !== null && $v !== '');
 
-        return $this->call(fn () => (array) $this->youtube()->channels->listChannels($part, $params));
+        return $this->call(fn (): array => (array) $this->youtube()->channels->listChannels($part, $params));
     }
 
     /**

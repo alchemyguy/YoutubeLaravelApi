@@ -9,11 +9,13 @@ use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
 {
+    #[\Override]
     protected function getPackageProviders($app): array
     {
         return [YoutubeLaravelApiServiceProvider::class];
     }
 
+    #[\Override]
     protected function defineEnvironment($app): void
     {
         $app['config']->set('youtube', [

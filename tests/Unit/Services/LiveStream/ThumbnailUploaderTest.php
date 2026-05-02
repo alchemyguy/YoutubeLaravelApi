@@ -13,6 +13,7 @@ use Mockery;
 
 final class ThumbnailUploaderTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         Mockery::close();

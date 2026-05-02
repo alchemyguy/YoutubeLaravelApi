@@ -17,6 +17,7 @@ use Mockery;
 
 final class BroadcastManagerTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         Mockery::close();
@@ -26,10 +27,8 @@ final class BroadcastManagerTest extends TestCase
     public function test_insert_calls_live_broadcasts_insert(): void
     {
         $broadcasts = Mockery::mock(LiveBroadcasts::class);
-        $broadcasts->shouldReceive('insert')->once()->withArgs(function ($part, $resource, $params) {
-            return $part === 'snippet,status'
-                && $resource instanceof LiveBroadcast;
-        })->andReturn((object) ['id' => 'evt-1']);
+        $broadcasts->shouldReceive('insert')->once()->withArgs(fn ($part, $resource, $params): bool => $part === 'snippet,status'
+            && $resource instanceof LiveBroadcast)->andReturn((object) ['id' => 'evt-1']);
 
         $data = new BroadcastData(
             title: 'Live Title',

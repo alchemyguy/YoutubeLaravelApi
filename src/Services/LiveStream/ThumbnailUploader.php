@@ -12,9 +12,9 @@ use Psr\Http\Message\RequestInterface;
 
 class ThumbnailUploader
 {
-    private const ALLOWED_MIME = ['image/jpeg', 'image/png'];
+    private const array ALLOWED_MIME = ['image/jpeg', 'image/png'];
 
-    private const CHUNK_SIZE_BYTES = 1048576;
+    private const int CHUNK_SIZE_BYTES = 1048576;
 
     public function __construct(
         private readonly Client $client,
@@ -26,7 +26,7 @@ class ThumbnailUploader
         if (! is_file($path)) {
             throw new ConfigurationException("Thumbnail file not found: {$path}");
         }
-        $mime = (string) (mime_content_type($path) ?: 'application/octet-stream');
+        $mime = mime_content_type($path) ?: 'application/octet-stream';
         if (! in_array($mime, self::ALLOWED_MIME, true)) {
             throw new ConfigurationException(
                 "Unsupported thumbnail MIME type '{$mime}'. Allowed: " . implode(', ', self::ALLOWED_MIME)

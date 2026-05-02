@@ -11,7 +11,7 @@ use Google\Service\YouTube;
 
 class AuthenticateService extends BaseService
 {
-    private YouTube $youtube;
+    private readonly YouTube $youtube;
 
     public function __construct(?OAuthService $oauth = null, ?YouTube $youtube = null)
     {

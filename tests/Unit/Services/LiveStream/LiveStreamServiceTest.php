@@ -20,6 +20,7 @@ use Mockery;
 
 final class LiveStreamServiceTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         Mockery::close();

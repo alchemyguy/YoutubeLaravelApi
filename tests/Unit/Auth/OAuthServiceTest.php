@@ -14,6 +14,7 @@ use Mockery;
 
 final class OAuthServiceTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         Mockery::close();

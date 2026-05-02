@@ -15,6 +15,7 @@ use Mockery;
 
 final class BaseServiceTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         Mockery::close();

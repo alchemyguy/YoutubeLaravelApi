@@ -30,7 +30,7 @@ final readonly class BroadcastData
                 "scheduledStartTime ({$scheduledStartTime->format(DATE_ATOM)}) is in the past."
             );
         }
-        if ($scheduledEndTime !== null && $scheduledEndTime <= $scheduledStartTime) {
+        if ($scheduledEndTime instanceof DateTimeImmutable && $scheduledEndTime <= $scheduledStartTime) {
             throw new InvalidArgumentException(
                 'scheduled end time must be after scheduled start time.'
             );

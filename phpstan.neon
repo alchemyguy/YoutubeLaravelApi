@@ -11,5 +11,3 @@ parameters:
         - src/config/*
     tmpDir: .phpstan.cache
     treatPhpDocTypesAsCertain: false
-    ignoreErrors:
-        - identifier: missingType.iterableValue

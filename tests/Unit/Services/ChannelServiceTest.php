@@ -18,6 +18,7 @@ use Mockery;
 
 final class ChannelServiceTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         Mockery::close();
@@ -144,9 +145,7 @@ final class ChannelServiceTest extends TestCase
     public function test_subscribe_inserts_subscription(): void
     {
         $subs = Mockery::mock(Subscriptions::class);
-        $subs->shouldReceive('insert')->once()->withArgs(function (string $part, $resource) {
-            return $part === 'snippet' && $resource instanceof Subscription;
-        })->andReturn((object) ['id' => 'sub-1']);
+        $subs->shouldReceive('insert')->once()->withArgs(fn (string $part, $resource): bool => $part === 'snippet' && $resource instanceof Subscription)->andReturn((object) ['id' => 'sub-1']);
 
         $youtube = Mockery::mock(YouTube::class);
         $youtube->subscriptions = $subs;
@@ -197,10 +196,8 @@ final class ChannelServiceTest extends TestCase
     public function test_update_branding_calls_channels_update_with_resource(): void
     {
         $channels = Mockery::mock(Channels::class);
-        $channels->shouldReceive('update')->once()->withArgs(function ($part, $resource, $params) {
-            return $part === 'brandingSettings'
-                && $resource instanceof Channel;
-        })->andReturn((object) ['id' => 'UC1']);
+        $channels->shouldReceive('update')->once()->withArgs(fn ($part, $resource, $params): bool => $part === 'brandingSettings'
+            && $resource instanceof Channel)->andReturn((object) ['id' => 'UC1']);
 
         $youtube = Mockery::mock(YouTube::class);
         $youtube->channels = $channels;

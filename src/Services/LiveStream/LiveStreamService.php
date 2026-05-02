@@ -14,13 +14,13 @@ use Google\Service\YouTube\Video;
 
 class LiveStreamService extends BaseService
 {
-    private BroadcastManager $broadcasts;
+    private readonly BroadcastManager $broadcasts;
 
-    private StreamManager $streams;
+    private readonly StreamManager $streams;
 
-    private ThumbnailUploader $thumbnails;
+    private readonly ThumbnailUploader $thumbnails;
 
-    private YouTube $youtube;
+    private readonly YouTube $youtube;
 
     /** @var array<string, string> */
     private array $languages;
@@ -118,7 +118,7 @@ class LiveStreamService extends BaseService
     {
         $this->authorize($token);
 
-        return $this->call(fn () => $this->broadcasts->transition($broadcastId, $status));
+        return $this->call(fn (): array => $this->broadcasts->transition($broadcastId, $status));
     }
 
     /** @param array<string, mixed> $token */

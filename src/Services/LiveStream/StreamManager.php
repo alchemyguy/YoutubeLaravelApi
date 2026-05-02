@@ -53,10 +53,9 @@ class StreamManager
     }
 
     /**
-     * @param mixed $resp
      * @return array<string, mixed>
      */
-    private function decode($resp): array
+    private function decode(mixed $resp): array
     {
         if (is_array($resp)) {
             return $resp;

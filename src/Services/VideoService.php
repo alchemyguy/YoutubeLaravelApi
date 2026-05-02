@@ -27,9 +27,9 @@ class VideoService extends BaseService
      */
     public function listById(array $params, string $part = 'snippet,contentDetails,id,statistics'): array
     {
-        $params = array_filter($params, static fn ($v) => $v !== null && $v !== '');
+        $params = array_filter($params, static fn ($v): bool => $v !== null && $v !== '');
 
-        return $this->call(fn () => (array) $this->youtube()->videos->listVideos($part, $params));
+        return $this->call(fn (): array => (array) $this->youtube()->videos->listVideos($part, $params));
     }
 
     /**
@@ -38,9 +38,9 @@ class VideoService extends BaseService
      */
     public function search(array $params, string $part = 'snippet,id'): array
     {
-        $params = array_filter($params, static fn ($v) => $v !== null && $v !== '');
+        $params = array_filter($params, static fn ($v): bool => $v !== null && $v !== '');
 
-        return $this->call(fn () => (array) $this->youtube()->search->listSearch($part, $params));
+        return $this->call(fn (): array => (array) $this->youtube()->search->listSearch($part, $params));
     }
 
     /** @param array<string, mixed> $token */
