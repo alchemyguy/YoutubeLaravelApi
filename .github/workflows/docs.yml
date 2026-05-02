@@ -47,7 +47,7 @@ jobs:
       - name: Build site
         run: cd docs && npm run build
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: docs/.vitepress/dist
 
