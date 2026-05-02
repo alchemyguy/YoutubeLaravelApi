@@ -59,4 +59,43 @@ final class VideoServiceTest extends TestCase
 
         $svc->search(['q' => 'cats', 'pageToken' => '']);
     }
+
+    public function test_delete_video_authorizes_and_deletes(): void
+    {
+        $videos = Mockery::mock(Videos::class);
+        $videos->shouldReceive('delete')->once()->with('vid1')->andReturn(null);
+        $youtube = Mockery::mock(YouTube::class);
+        $youtube->videos = $videos;
+
+        $oauth = Mockery::mock(OAuthService::class);
+        $oauth->shouldReceive('setAccessToken')->once();
+
+        $svc = new class($oauth) extends VideoService {
+            public ?YouTube $injected = null;
+            protected function youtube(): YouTube { return $this->injected; }
+        };
+        $svc->injected = $youtube;
+
+        $svc->delete(['access_token' => 'tok'], 'vid1');
+    }
+
+    /** @bug regression for VideoService::videosRate (Section 6, bug 2) */
+    public function test_rate_calls_videos_rate_with_enum_value(): void
+    {
+        $videos = Mockery::mock(Videos::class);
+        $videos->shouldReceive('rate')->once()->with('vid1', 'like')->andReturn(null);
+        $youtube = Mockery::mock(YouTube::class);
+        $youtube->videos = $videos;
+
+        $oauth = Mockery::mock(OAuthService::class);
+        $oauth->shouldReceive('setAccessToken')->once();
+
+        $svc = new class($oauth) extends VideoService {
+            public ?YouTube $injected = null;
+            protected function youtube(): YouTube { return $this->injected; }
+        };
+        $svc->injected = $youtube;
+
+        $svc->rate(['access_token' => 'tok'], 'vid1', \Alchemyguy\YoutubeLaravelApi\Enums\Rating::Like);
+    }
 }

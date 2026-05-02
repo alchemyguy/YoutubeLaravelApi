@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Alchemyguy\YoutubeLaravelApi\Services;
 
+use Alchemyguy\YoutubeLaravelApi\Enums\Rating;
 use Google\Service\YouTube;
 
 class VideoService extends BaseService
@@ -31,5 +32,19 @@ class VideoService extends BaseService
     {
         $params = array_filter($params, static fn ($v) => $v !== null && $v !== '');
         return $this->call(fn () => (array) $this->youtube()->search->listSearch($part, $params));
+    }
+
+    /** @param array<string, mixed> $token */
+    public function delete(array $token, string $videoId): void
+    {
+        $this->authorize($token);
+        $this->call(fn () => $this->youtube()->videos->delete($videoId));
+    }
+
+    /** @param array<string, mixed> $token */
+    public function rate(array $token, string $videoId, Rating $rating): void
+    {
+        $this->authorize($token);
+        $this->call(fn () => $this->youtube()->videos->rate($videoId, $rating->value));
     }
 }
