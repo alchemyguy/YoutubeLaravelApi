@@ -24,15 +24,24 @@ final class ResourceBuilderTest extends TestCase
         $this->assertSame(['snippet' => ['tags' => ['a', ' b', ' c']]], $r);
     }
 
-    public function test_skips_falsy_values(): void
+    public function test_skips_only_null_and_empty_string_values(): void
     {
         $r = ResourceBuilder::fromProperties([
             'a' => 'x',
             'b' => '',
             'c' => null,
-            'd' => 0,
         ]);
         $this->assertSame(['a' => 'x'], $r);
+    }
+
+    public function test_preserves_false_and_zero_values(): void
+    {
+        $r = ResourceBuilder::fromProperties([
+            'flag' => false,
+            'count' => 0,
+            'on' => true,
+        ]);
+        $this->assertSame(['flag' => false, 'count' => 0, 'on' => true], $r);
     }
 
     public function test_array_marker_with_empty_value_returns_empty_array(): void

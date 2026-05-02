@@ -18,7 +18,7 @@ final class ResourceBuilder
         $resource = [];
 
         foreach ($properties as $path => $value) {
-            if (empty($value)) {
+            if ($value === null || $value === '') {
                 continue;
             }
             self::set($resource, $path, $value);
