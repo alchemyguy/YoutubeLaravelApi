@@ -11,10 +11,16 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      actions:
+        patterns: ["*"]
     labels: ["dependencies", "github-actions"]
 
   - package-ecosystem: "npm"
     directory: "/docs"
     schedule:
       interval: "weekly"
+    groups:
+      docs:
+        patterns: ["*"]
     labels: ["dependencies", "docs"]
